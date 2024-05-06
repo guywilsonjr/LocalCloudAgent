@@ -1,0 +1,63 @@
+[project]
+
+name = "local-cloud-agent"
+version = "0.0.1"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+readme = "README.md"
+authors = [
+    { name = "Guy Wilson", email = "guywilsonjr@gmail.com" },
+]
+maintainers = [
+    { name = "Guy Wilson", email = "guywilsonjr@gmail.com" },
+]
+
+
+classifiers = [
+    # How mature is this project? Common values are
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    "Development Status :: 3 - Alpha",
+    # Indicate who your project is intended for
+    "Intended Audience :: Developers",
+    # Pick your license as you wish (see also "license" above)
+    "License :: OSI Approved :: Apple Public Source License",    # Specify the Python versions you support here.
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
+[project.urls]
+Homepage = "https://github.com/guywilsonjr/LocalCloudAgent"
+Repository = "https://github.com/guywilsonjr/LocalCloudAgent"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.mypy]
+plugins = [
+    "pydantic.mypy"
+]
+
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+
+# for strict mypy: (this is the tricky one :-))
+disallow_untyped_defs = true
+
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
