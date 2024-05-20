@@ -1,9 +1,8 @@
 [project]
 
 name = "local-cloud-agent"
-version = "0.0.1"
 requires-python = ">=3.10"
-dynamic = ["dependencies"]
+dynamic = ["dependencies", "version"]
 
 readme = "README.md"
 authors = [
@@ -37,6 +36,12 @@ Repository = "https://github.com/guywilsonjr/LocalCloudAgent"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+
+[tool.setuptools_scm]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
 [tool.mypy]
 plugins = [
     "pydantic.mypy"
@@ -51,11 +56,6 @@ no_implicit_reexport = true
 
 # for strict mypy: (this is the tricky one :-))
 disallow_untyped_defs = true
-
-
-[tool.setuptools.dynamic]
-dependencies = { file = ["requirements.txt"] }
-
 
 [tool.pydantic-mypy]
 init_forbid_extra = true

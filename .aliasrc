@@ -1,0 +1,6 @@
+VERSION=$(cat VERSION)
+alias update-tag='git tag $VERSION'
+export AWS_DEFAULT_REGION=$(aws configure get region)
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account |  tr -d '"')
+
+alias ecrlogin='aws ecr get-login-password | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com'

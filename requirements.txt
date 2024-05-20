@@ -8,3 +8,5 @@ cryptography
 git+https://github.com/guywilsonjr/CumulonimbusModels@v0.0.0-rc1
 aws-lambda-powertools
 tenacity
+docker
+GitPython
