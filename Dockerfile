@@ -4,5 +4,4 @@ ADD requirements.txt .
 RUN python3 -m venv .venv
 RUN .venv/bin/python -m pip install -Ur requirements.txt
 ADD src .
-ADD VERSION .
-ENTRYPOINT ["VERSION=$(cat /VERSION)", ".venv/bin/python", "main.py"]
+ENTRYPOINT [".venv/bin/python", "main.py"]

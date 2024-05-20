@@ -8,13 +8,14 @@ from types_aiobotocore_sqs.type_defs import MessageTypeDef
 
 from models import PersistedOperation
 from util import agent_state, append_data_to_file, fetch_file_data, local_cloud_agent_dir, logger
-from updater import initiate_update_service
+from updater import initiate_update_service, update_repo_and_docker_image
+
 
 operation_status_fp = f'{local_cloud_agent_dir}/operations.log'
 update_operation_fp = f'{local_cloud_agent_dir}/operations/update.json'
 
 operations_map = {
-    OperationType.UPDATE: initiate_update_service
+    OperationType.UPDATE: update_repo_and_docker_image
 }
 
 

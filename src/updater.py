@@ -3,7 +3,7 @@ import os
 from git import Repo
 import docker  # type: ignore
 
-from util import aiosession, fetch_file_data, local_cloud_agent_dir, logger, write_data_to_file
+from util import aiosession, fetch_file_data, local_cloud_agent_dir, logger, write_data_to_file, home_dir
 
 
 local_agent_repository_name = 'cumulonimbusinfrastructurestackecrb011c8ff-localcloudagent882a885f-uf9f1uyibbfx'
@@ -18,8 +18,10 @@ async def fetch_prev_run_version() -> str:
     return await fetch_file_data(latest_running_version_fp)
 
 
-def update_repository() -> None:
-    pass
+async def update_repository() -> None:
+    repo = Repo(f'{home_dir}/repos/LocalCloudAgent')
+    remote = repo.remote()
+    remote.pull()
 
 
 async def initiate_update_service() -> None:
@@ -42,3 +44,8 @@ async def initiate_update_service() -> None:
     logger.info('Pulled latest image. Restarting')
     exit(0)
 
+
+
+async def update_repo_and_docker_image() -> None:
+    await update_repository()
+    await initiate_update_service()
