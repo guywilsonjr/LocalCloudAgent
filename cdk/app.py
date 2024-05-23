@@ -1,14 +1,14 @@
 import boto3
 from aws_cdk import Environment, Stack
-from aws_cdk.aws_ecr import Repository
-from aws_cdk.aws_ecr_assets import DockerImageAsset
+from aws_cdk.aws_ecr import IRepository, Repository
+from aws_cdk.aws_ecr_assets import DockerImageAsset, Platform
 from constructs import Construct
 from cdk_ecr_deployment import ECRDeployment, DockerImageName
 import aws_cdk as cdk
+from setuptools_scm import get_version, NonNormalizedVersion
 
 
-with open('VERSION') as f:
-    VERSION = f.read().strip()
+VERSION = NonNormalizedVersion(get_version()).base_version
 
 
 def get_cdk_env() -> Environment:
@@ -17,6 +17,31 @@ def get_cdk_env() -> Environment:
     account_id = resp['Account']
     region = boto3.Session().region_name
     return Environment(account=account_id, region=region)
+
+
+class BuildDeployImage:
+    def __init__(self, scope: Construct, cloud_agent_repo: IRepository, platform: Platform) -> None:
+        self.scope = scope
+        self.platform = platform
+        self.image = DockerImageAsset(
+            scope,
+            f'{platform}-Image',
+            directory='.',
+            platform=platform,
+            cache_disabled=True
+        )
+        self.versioned_deployment = ECRDeployment(
+            scope,
+            f'{platform}-VersionedImageDeployment',
+            src=DockerImageName(self.image.image_uri),
+            dest=DockerImageName(f'{cloud_agent_repo.repository_uri}:{VERSION}')
+        )
+        self.latest_deployment = ECRDeployment(
+            scope,
+            f'{platform}-LatestImageDeployment',
+            src=DockerImageName(self.image.image_uri),
+            dest=DockerImageName(f'{cloud_agent_repo.repository_uri}:latest')
+        )
 
 
 class LocalCloudAgent(Stack):
@@ -28,23 +53,10 @@ class LocalCloudAgent(Stack):
             'LocalCloudAgentRepo',
             repository_name='cumulonimbusinfrastructurestackecrb011c8ff-localcloudagent882a885f-uf9f1uyibbfx'
         )
-        self.image = DockerImageAsset(
-            self,
-            'Image',
-            directory='.',
-        )
-        self.versioned_deployment = ECRDeployment(
-            self,
-            'VersionedImageDeployment',
-            src=DockerImageName(self.image.image_uri),
-            dest=DockerImageName(f'{self.cloud_agent_repo.repository_uri}:{VERSION}')
-        )
-        self.latest_deployment = ECRDeployment(
-            self,
-            'LatestImageDeployment',
-            src=DockerImageName(self.image.image_uri),
-            dest=DockerImageName(f'{self.cloud_agent_repo.repository_uri}:latest')
-        )
+
+        self.linux64_bdi = BuildDeployImage(self, self.cloud_agent_repo, Platform.LINUX_AMD64)
+        self.arm_bdi = BuildDeployImage(self, self.cloud_agent_repo, Platform.LINUX_ARM64)
+
 
 
 app = cdk.App()
