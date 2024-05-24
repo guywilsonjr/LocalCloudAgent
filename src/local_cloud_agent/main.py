@@ -4,7 +4,7 @@ from cumulonimbus_models.operations import OperationResultStatus
 
 from operations import complete_operation, operations_map, init_operation
 from agent import startup
-from util import agent_state, get_agent_state, logger, aiosession
+from util import get_agent_state, logger, aiosession
 
 
 async def listen_to_queue() -> None:
