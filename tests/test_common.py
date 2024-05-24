@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 
 import pytest_asyncio
 import constants
@@ -9,9 +10,15 @@ def rmfile(path):
     if os.path.exists(path):
         os.remove(path)
 
+
 def rmdir(path):
     if os.path.exists(path):
         os.rmdir(path)
+
+
+def rmtree(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
 
 
 @pytest_asyncio.fixture(scope='session')
@@ -43,10 +50,11 @@ def setup_home_dir():
         f.write('\n')
 
     yield None
-    rmdir(f'{constants.home_dir}/.cache')
+    rmtree(f'{constants.home_dir}/.cache')
 
     rmfile(constants.agent_registration_fp)
     rmdir(constants.operations_dir)
+    rmfile(constants.agent_log_fp)
     rmdir(constants.agent_dir)
     rmfile(constants.latest_running_version_fp)
     rmdir(constants.local_cloud_agent_dir)
