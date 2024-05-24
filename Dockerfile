@@ -1,4 +1,4 @@
-FROM 936272581790.dkr.ecr.us-west-1.amazonaws.com/cumulonimbusinfrastructurestackecrb011c8ff-pythona57b7ce0-zwlwp6r36elt:latest
+FROM 936272581790.dkr.ecr.us-west-1.amazonaws.com/cumulonimbusinfrastructurestackecrb011c8ff-pythona57b7ce0-zwlwp6r36elt
 RUN apt-get update && apt-get install -y git
 ADD requirements.txt .
 RUN python3 -m venv .venv

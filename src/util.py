@@ -2,7 +2,7 @@ import asyncio
 import logging
 import os
 import sys
-from socket import socket
+import socket
 from typing import Optional
 
 import aioboto3
@@ -10,33 +10,26 @@ import aiohttp
 from aiofile import async_open
 from aws_lambda_powertools import Logger
 from cumulonimbus_models.agent import AgentRegisterRequest, AgentRegisterResponse
+from tenacity import before_log, retry, wait_exponential
 
+from constants import agent_log_fp, agent_registration_fp
 from models import AgentState
 
 
-home_dir = os.environ['HOME']
-local_cloud_agent_dir = f'{home_dir}/.local_cloud_agent'
-os.makedirs(local_cloud_agent_dir, exist_ok=True)
-
 logger = Logger(
     service='LocalCloudAgent',
-    logger_handler=logging.FileHandler(f'{home_dir}/.local_cloud_agent/agent.log'),
+    logger_handler=logging.FileHandler(agent_log_fp),
     log_uncaught_exceptions=True
 )
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
-if not os.path.exists(f'{home_dir}/.aws/credentials'):
-    logger.error('AWS credentials not found. Please run `aws configure` to set up your credentials.')
-    exit(1)
-
-
+logger = logging.getLogger(__name__)
 aiosession: aioboto3.Session = aioboto3.Session()
 
-agent_registration_fp = f'{local_cloud_agent_dir}/agent/registration.json'
 BASE_API_URL = 'https://api.local.guywilsonjr.com'
 
 
-@retry(wait=wait_exponential(), before=before_log(logger, logging.INFO))  # type: ignore
+@retry(wait=wait_exponential(), before=before_log(logger, logging.INFO))
 async def register_agent_request(req: AgentRegisterRequest) -> AgentRegisterResponse:
     url = req.get_url(BASE_API_URL)
     async with aiohttp.ClientSession() as session:
@@ -56,28 +49,6 @@ async def register_agent() -> AgentRegisterResponse:
     return agent_data
 
 
-async def get_registration() -> AgentRegisterResponse:
-    agent_data = await fetch_file_data(agent_registration_fp)
-    if agent_data is None:
-        logger.info('No registration found, registering agent')
-        registration = await register_agent()
-        logger.info(f'Registration complete for agent: {registration.agent_id}')
-        return registration
-    else:
-        registration = AgentRegisterResponse.parse_raw(agent_data)
-        logger.info(f'Found registration for agent: {registration.agent_id}')
-        return registration
-
-
-agent_registration = asyncio.run(get_registration())
-
-agent_state = AgentState(
-    agent_id=agent_registration.agent_id,
-    queue_url=agent_registration.operations_queue_url,
-    version=os.environ['VERSION']
-)
-
-
 async def fetch_file_data(fp: str) -> Optional[str]:
     if os.path.exists(fp):
         async with async_open(fp, 'r') as f:
@@ -92,5 +63,30 @@ async def write_data_to_file(fp: str, data: str) -> None:
 
 
 async def append_data_to_file(fp: str, data: str) -> None:
-    async with async_open(fp, 'a') as f:
-        await f.write(data)
+    if os.path.exists(fp):
+        async with async_open(fp, 'a') as f:
+            await f.write(data)
+    else:
+        await write_data_to_file(fp, data)
+
+
+async def get_registration() -> AgentRegisterResponse:
+    agent_data = await fetch_file_data(agent_registration_fp)
+    if agent_data is None:
+        logger.info('No registration found, registering agent')
+        registration = await register_agent()
+        logger.info(f'Registration complete for agent: {registration.agent_id}')
+        return registration
+    else:
+        registration = AgentRegisterResponse.model_validate_json(agent_data)
+        logger.info(f'Found registration for agent: {registration.agent_id}')
+        return registration
+
+
+async def get_agent_state() -> AgentState:
+    agent_registration = await get_registration()
+    return AgentState(
+        agent_id=agent_registration.agent_id,
+        queue_url=agent_registration.operations_queue_url,
+        version=os.environ['VERSION']
+    )

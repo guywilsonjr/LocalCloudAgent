@@ -1,13 +1,14 @@
 import base64
 import os
 from git import Repo
-import docker  # type: ignore
+import docker
 
-from util import aiosession, fetch_file_data, local_cloud_agent_dir, logger, write_data_to_file, home_dir
+from constants import latest_running_version_fp, repo_dir
+from fs_util import home_dir
+from util import aiosession, fetch_file_data, logger, write_data_to_file
 
 
 local_agent_repository_name = 'cumulonimbusinfrastructurestackecrb011c8ff-localcloudagent882a885f-uf9f1uyibbfx'
-latest_running_version_fp = f'{local_cloud_agent_dir}/latest_running_version'
 
 
 async def save_latest_running_version() -> None:
@@ -19,7 +20,7 @@ async def fetch_prev_run_version() -> str:
 
 
 async def update_repository() -> None:
-    repo = Repo(f'{home_dir}/repos/LocalCloudAgent')
+    repo = Repo(repo_dir)
     remote = repo.remote()
     remote.pull()
 

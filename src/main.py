@@ -4,11 +4,12 @@ from cumulonimbus_models.operations import OperationResultStatus
 
 from operations import complete_operation, operations_map, init_operation
 from agent import startup
-from util import agent_state, logger, aiosession
+from util import agent_state, get_agent_state, logger, aiosession
 
 
 async def listen_to_queue() -> None:
     logger.info('Listening to queue')
+    agent_state = await get_agent_state()
     async with aiosession.client('sqs') as sqs:
         queue_url = agent_state.queue_url
         while True:
