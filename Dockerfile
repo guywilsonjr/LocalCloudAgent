@@ -3,5 +3,5 @@ RUN apt-get update && apt-get install -y git
 ADD requirements.txt .
 RUN python3 -m venv .venv
 RUN .venv/bin/python -m pip install -Ur requirements.txt
-ADD src .
+ADD src/local_cloud_agent .
 ENTRYPOINT [".venv/bin/python", "main.py"]

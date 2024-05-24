@@ -5,7 +5,7 @@ services:
     user: root
     restart: always
     environment:
-      - VERSION=$(git describe --tags)
+      - VERSION=$(git describe)
     volumes:
       - ${HOME}/repos/LocalCloudAgent:/root/repos/LocalCloudAgent
       - ${HOME}/.local_cloud_agent:/root/.local_cloud_agent
