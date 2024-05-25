@@ -4,12 +4,13 @@ from datetime import datetime
 from cumulonimbus_models.operations import OperationResultStatus
 
 from operations import complete_operation, fetch_update_operation
+from util import logger
 from updater import fetch_prev_run_version, save_latest_running_version
 
 
 async def check_for_update_operations() -> None:
     version = os.environ['VERSION']
-    prev_version = fetch_prev_run_version()
+    prev_version = await fetch_prev_run_version()
     update_operation = await fetch_update_operation()
     if update_operation:
         if prev_version == version:
@@ -29,5 +30,7 @@ async def check_for_update_operations() -> None:
 
 
 async def startup():
+    version = os.environ['VERSION']
+    logger.info(f'Starting agent version: {version}')
     await check_for_update_operations()
     await save_latest_running_version()
