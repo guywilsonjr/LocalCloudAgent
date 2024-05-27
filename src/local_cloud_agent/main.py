@@ -4,12 +4,12 @@ from cumulonimbus_models.operations import OperationResultStatus
 
 from operations import complete_operation, operations_map, init_operation
 from agent import startup
+from models import AgentState
 from util import get_agent_state, logger, aiosession
 
 
-async def listen_to_queue() -> None:
+async def listen_to_queue(agent_state: AgentState) -> None:
     logger.info('Listening to queue')
-    agent_state = await get_agent_state()
     async with aiosession.client('sqs') as sqs:
         queue_url = agent_state.queue_url
         while True:
@@ -23,6 +23,7 @@ async def listen_to_queue() -> None:
                 logger.info('Received message')
                 message = response['Messages'][0]
                 operation = await init_operation(message)
+                logger.info(f'Received operation: {operation}')
                 await sqs.delete_message(
                     QueueUrl=queue_url,
                     ReceiptHandle=message['ReceiptHandle']
@@ -42,7 +43,8 @@ async def listen_to_queue() -> None:
 
 async def async_main() -> None:
     await startup()
-    await listen_to_queue()
+    agent_state = await get_agent_state()
+    await listen_to_queue(agent_state)
 
 
 def main() -> None:

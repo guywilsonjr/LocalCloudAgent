@@ -3,8 +3,8 @@ import os
 from git import Repo
 import docker
 
-from constants import latest_running_version_fp, repo_dir
-from fs_util import home_dir
+from constants import latest_running_version_fp, repo_dir, update_operation_fp
+from models import PersistedOperation
 from util import aiosession, fetch_file_data, logger, write_data_to_file
 
 
@@ -47,6 +47,7 @@ async def initiate_update_service() -> None:
 
 
 
-async def update_repo_and_docker_image() -> None:
+async def update_repo_and_docker_image(operation: PersistedOperation) -> None:
+    await write_data_to_file(update_operation_fp, operation.model_dump_json())
     await update_repository()
     await initiate_update_service()

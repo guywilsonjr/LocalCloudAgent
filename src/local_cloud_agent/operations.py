@@ -33,7 +33,7 @@ async def send_operation_result(operation: PersistedOperation, output: str) -> N
         started=operation.started,
         completed=datetime.now()
     )
-    url = update_result_req.get_url(base_url=BASE_API_URL, agent_id=agent_state.agent_id, operation_id=operation.operation_id)
+    url = update_result_req.get_url(base_url=BASE_API_URL, agent_id=agent_state.agent_id, operation_id=operation.operation.id)
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=update_result_req.model_dump()) as resp:
             if resp.status != 200:

@@ -8,7 +8,7 @@ from typing import Tuple
 from aiofile import async_open
 from cumulonimbus_models.network import NetworkInterface
 
-from util import home_dir
+from constants import home_dir
 
 
 ifc_dir_loc = f'/{home_dir}/host/sys/class/net/'

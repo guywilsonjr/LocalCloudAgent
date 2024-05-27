@@ -11,7 +11,7 @@ from aws_lambda_powertools import Logger
 from cumulonimbus_models.agent import AgentRegisterRequest, AgentRegisterResponse
 from tenacity import before_log, retry, wait_exponential
 
-from constants import agent_log_fp, agent_registration_fp
+from constants import agent_dir, agent_log_fp, agent_registration_fp
 from models import AgentState
 
 
@@ -22,7 +22,6 @@ logger = Logger(
 )
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
-logger = logging.getLogger(__name__)
 aiosession: aioboto3.Session = aioboto3.Session()
 
 BASE_API_URL = 'https://api.local.guywilsonjr.com'
@@ -72,7 +71,7 @@ async def append_data_to_file(fp: str, data: str) -> None:
 async def get_registration() -> AgentRegisterResponse:
     agent_data = await fetch_file_data(agent_registration_fp)
     if agent_data is None:
-        logger.info('No registration found, registering agent')
+        logger.info(f'No registration found, registering agent. Found: {os.listdir(agent_dir)}')
         registration = await register_agent()
         logger.info(f'Registration complete for agent: {registration.agent_id}')
         return registration
