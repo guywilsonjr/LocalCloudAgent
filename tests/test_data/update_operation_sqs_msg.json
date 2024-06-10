@@ -1,0 +1,22 @@
+{
+  "Messages": [
+    {
+      "MessageId": "a493c840-fa6b-474d-a923-f7b5f296fac5",
+      "ReceiptHandle": "AQEBxRA/d2bB2nUogWyDEHCPcSiRODQgOkE8H0z3oDfgpcz+fLdnVdzLLFlHeJFwRse6BIo+VmRXQUs1Sk/oYCmEf4WV2qDU9eGDjDpBkFsx+0Yvt+2U7chdfI9aKhoyj2yywtVI6SJAGzhS0b6HQs1Bh5J6smsVZLNJI2n2kWHCRVlc97XB+KYJ4Pr5li1kJp9tzFH17vLzajuenHhg6PhebU1mVzaGs5Wn/QemT9Y4l6Xb6I0a0fd5x4u7uXDvREBLtnMaoPHFQ/r0SsUozAA43hAfmu6OLfMEG6fgIW1wb7eKRoN8Bi+dFmNTHMcafeokzm4b9cBJHSJ+pK4CAtVp+JbOlbofjmTbLlefssyiD3Bhzt7y730BWbS4SF/OqeXtLiFlTV09QbJlieL3HBsw+1VtksfW2KHJW77JB9UOiyhqxtS/ypmaxTCBGKTbfRU4HqRo7F8ICNHBpblGS/SLmw==",
+      "MD5OfBody": "2e9b23fc9e462a13e4ef40baeae09a0f",
+      "Body": "{\"id\":\"64d2ca48-14ba-11ef-ae61-65dd3a51a489\",\"type\":\"UPDATE\",\"parameters\":{}}"
+    }
+  ],
+  "ResponseMetadata": {
+    "RequestId": "6caa0922-2ea6-5633-8567-57ed3499dcf1",
+    "HTTPStatusCode": 200,
+    "HTTPHeaders": {
+      "x-amzn-requestid": "6caa0922-2ea6-5633-8567-57ed3499dcf1",
+      "date": "Mon, 27 May 2024 23:32:15 GMT",
+      "content-type": "text/xml",
+      "content-length": "1042",
+      "connection": "keep-alive"
+    },
+    "RetryAttempts": 0
+  }
+}

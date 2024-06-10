@@ -22,7 +22,7 @@ def rmtree(path):
 
 
 @pytest_asyncio.fixture(scope='session')
-def setup_home_dir():
+def setup_file_system():
     os.makedirs(constants.home_dir, exist_ok=True)
     os.makedirs(constants.repo_dir, exist_ok=True)
 

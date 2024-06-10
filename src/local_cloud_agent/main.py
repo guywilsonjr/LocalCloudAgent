@@ -1,8 +1,9 @@
 import asyncio
 
-from cumulonimbus_models.operations import OperationResultStatus
+from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
-from operations import complete_operation, operations_map, init_operation
+import fs_util
+from operations.operations_util import complete_operation, operations_map, init_operation
 from agent import startup
 from models import AgentState
 from util import get_agent_state, logger, aiosession
@@ -32,16 +33,21 @@ async def listen_to_queue(agent_state: AgentState) -> None:
                 try:
                     result = await operation_func(operation)
                 except Exception as e:
-                    result = str(e)
+                    result = OperationResult(operation_output=str(e), operation_status=OperationResultStatus.FAILURE)
                     operation.status = OperationResultStatus.FAILURE
                     logger.exception(e)
                 finally:
                     await complete_operation(operation, result)
+                    if operation.operation.type == 'UPDATE':
+                        logger.info('Update Complete. Restarting')
+                        exit(0)
+
             else:
-                await asyncio.sleep(60 * 5)
+                await asyncio.sleep(60)
 
 
 async def async_main() -> None:
+    fs_util.validate_fs()
     await startup()
     agent_state = await get_agent_state()
     await listen_to_queue(agent_state)

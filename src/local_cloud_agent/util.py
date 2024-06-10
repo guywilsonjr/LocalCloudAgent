@@ -29,7 +29,7 @@ BASE_API_URL = 'https://api.local.guywilsonjr.com'
 
 @retry(wait=wait_exponential(), before=before_log(logger, logging.INFO))
 async def register_agent_request(req: AgentRegisterRequest) -> AgentRegisterResponse:
-    url = req.get_url(BASE_API_URL)
+    url = AgentRegisterRequest.get_url(BASE_API_URL)
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=req.model_dump()) as resp:
             if resp.status != 200:

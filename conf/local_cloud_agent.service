@@ -1,0 +1,9 @@
+[Unit]
+Description=Local Cloud Agent
+After=network.target
+
+[Service]
+ExecStart=/usr/local/LocalCloudAgent/.venv/bin/python3 /usr/local/LocalCloudAgent/src/main.py
+User=root
+Restart=always
+WorkingDirectory=/root/LocalCloudAgent
