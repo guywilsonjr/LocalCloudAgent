@@ -3,7 +3,7 @@ import os
 import shutil
 
 import pytest_asyncio
-import constants
+from configuration import agent_config
 
 
 def rmfile(path):
@@ -23,20 +23,18 @@ def rmtree(path):
 
 @pytest_asyncio.fixture(scope='session')
 def setup_file_system():
-    os.makedirs(constants.home_dir, exist_ok=True)
-    os.makedirs(constants.repo_dir, exist_ok=True)
+    os.makedirs(agent_config.log_dir, exist_ok=True)
+    os.makedirs(agent_config.home_dir, exist_ok=True)
+    os.makedirs(agent_config.repo_dir, exist_ok=True)
 
-    os.makedirs(constants.aws_dir, exist_ok=True)
-    with open(constants.aws_creds_fp, 'w') as f:
+    os.makedirs(agent_config.aws_dir, exist_ok=True)
+    with open(agent_config.aws_creds_fp, 'w') as f:
         f.write('')
 
-    os.makedirs(constants.local_cloud_agent_dir, exist_ok=True)
-    with open(constants.latest_running_version_fp, 'w') as f:
-        f.write('a.b.c')
-
-    os.makedirs(constants.operations_dir, exist_ok=True)
-    os.makedirs(constants.agent_dir, exist_ok=True)
-    with open(constants.agent_registration_fp, 'w') as f:
+    os.makedirs(agent_config.local_cloud_agent_dir, exist_ok=True)
+    os.makedirs(agent_config.operations_dir, exist_ok=True)
+    os.makedirs(agent_config.agent_dir, exist_ok=True)
+    with open(agent_config.agent_registration_fp, 'w') as f:
         f.write(
             json.dumps(
                 {
@@ -50,19 +48,8 @@ def setup_file_system():
         f.write('\n')
 
     yield None
-    rmtree(f'{constants.home_dir}/.cache')
+    rmtree('tests/.testfs')
 
-    rmfile(constants.agent_registration_fp)
-    rmdir(constants.operations_dir)
-    rmfile(constants.agent_log_fp)
-    rmdir(constants.agent_dir)
-    rmfile(constants.latest_running_version_fp)
-    rmdir(constants.local_cloud_agent_dir)
-    rmfile(constants.aws_creds_fp)
-    rmdir(constants.aws_dir)
-    rmdir(constants.repo_dir)
-    rmdir(f'{constants.home_dir}/repos')
-    rmdir(constants.home_dir)
 
 
 
