@@ -1,5 +1,4 @@
 import logging
-import os
 
 import pytest
 from cumulonimbus_models.agent import AgentRegisterResponse

@@ -1,7 +1,5 @@
 import json
-import os
 from datetime import datetime
-from typing import Optional
 
 import aiohttp
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus, OperationType, UpdateOperationResultRequest
@@ -9,7 +7,7 @@ from types_aiobotocore_sqs.type_defs import MessageTypeDef
 
 from models import PersistedOperation
 from configuration import agent_config
-from util import append_data_to_file, BASE_API_URL, fetch_file_data, get_agent_state, logger
+from util import append_data_to_file, BASE_API_URL, get_agent_state, logger
 from versioning import update_repo_and_docker_image
 
 
@@ -43,13 +41,5 @@ async def complete_operation(operation: PersistedOperation, output: OperationRes
     await append_data_to_file(agent_config.operation_log_fp, operation.model_dump_json() + '\n')
     await send_operation_result(operation, output)
 
-
-async def fetch_update_operation() -> Optional[PersistedOperation]:
-    data = await fetch_file_data(agent_config.update_operation_fp)
-    if data is not None:
-        os.remove(agent_config.update_operation_fp)
-        return PersistedOperation.model_validate_json(data)
-    else:
-        return None
 
 

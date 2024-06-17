@@ -1,13 +1,9 @@
-import base64
-from typing import Tuple
-
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 from git import Git, Repo
-import docker
 
 from configuration import repo_url, agent_config
 from models import PersistedOperation
-from util import aiosession, logger, write_data_to_file
+from util import logger, write_data_to_file
 
 
 

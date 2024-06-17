@@ -5,7 +5,7 @@ from types_aiobotocore_sqs.type_defs import MessageTypeDef
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus, OperationType, UpdateOperationResultRequest
 
 from models import PersistedOperation
-import constants
+from configuration import agent_config
 from test_common import setup_file_system, rmfile
 
 
@@ -25,7 +25,7 @@ async def test_init_operation(setup_file_system):
         operation=test_op,
         status=OperationResultStatus.PENDING
     )
-    with open(constants.operation_log_fp, 'w') as f:
+    with open(agent_config.operation_log_fp, 'w') as f:
         f.write(test_persist_op.model_dump_json() + '\n')
     from operations import operations_util
 
@@ -34,14 +34,14 @@ async def test_init_operation(setup_file_system):
         Body=test_op.model_dump_json()
     )
     await operations_util.init_operation(test_msg)
-    with open(constants.operation_log_fp, 'r') as f:
+    with open(agent_config.operation_log_fp, 'r') as f:
         lines = f.readlines()
     assert len(lines) == 2
     persisted_op = PersistedOperation.model_validate_json(lines[0].strip())
     assert OperationResultStatus.PENDING == persisted_op.status
     assert test_op == persisted_op.operation
     assert start_dt < persisted_op.started
-    rmfile(constants.operation_log_fp)
+    rmfile(agent_config.operation_log_fp)
 
 
 class MockResponse:
