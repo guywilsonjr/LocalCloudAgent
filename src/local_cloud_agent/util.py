@@ -11,13 +11,13 @@ from aws_lambda_powertools import Logger
 from cumulonimbus_models.agent import AgentRegisterRequest, AgentRegisterResponse
 from tenacity import before_log, retry, wait_exponential
 
-from constants import agent_dir, agent_log_fp, agent_registration_fp
+from configuration import agent_config
 from models import AgentState
 
 
 logger = Logger(
     service='LocalCloudAgent',
-    logger_handler=logging.FileHandler(agent_log_fp),
+    logger_handler=logging.FileHandler(agent_config.agent_log_fp),
     log_uncaught_exceptions=True
 )
 logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -43,7 +43,7 @@ async def register_agent() -> AgentRegisterResponse:
     hostname = socket.gethostname()
     register_req = AgentRegisterRequest(hostname=hostname)
     agent_data = await register_agent_request(register_req)
-    await write_data_to_file(agent_registration_fp, agent_data.model_dump_json())
+    await write_data_to_file(agent_config.agent_registration_fp, agent_data.model_dump_json())
     return agent_data
 
 
@@ -69,9 +69,9 @@ async def append_data_to_file(fp: str, data: str) -> None:
 
 
 async def get_registration() -> AgentRegisterResponse:
-    agent_data = await fetch_file_data(agent_registration_fp)
+    agent_data = await fetch_file_data(agent_config.agent_registration_fp)
     if agent_data is None:
-        logger.info(f'No registration found, registering agent. Found: {os.listdir(agent_dir)}')
+        logger.info(f'No registration found, registering agent. Found: {os.listdir(agent_config.agent_dir)}')
         registration = await register_agent()
         logger.info(f'Registration complete for agent: {registration.agent_id}')
         return registration

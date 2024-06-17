@@ -9,3 +9,4 @@ GitPython
 pydantic
 tenacity
 types-aioboto3[sqs]
+PyYAML

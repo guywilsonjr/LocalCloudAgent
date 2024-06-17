@@ -1,0 +1,4 @@
+REPO_LOC: /usr/local/LocalCloudAgent
+HOME_DIR: /root
+LOG_DIR: /var/log/LocalCloudAgent
+AWS_DIR: /root/.aws

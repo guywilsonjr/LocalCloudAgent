@@ -8,9 +8,9 @@ from cumulonimbus_models.operations import Operation, OperationResult, Operation
 from types_aiobotocore_sqs.type_defs import MessageTypeDef
 
 from models import PersistedOperation
-from constants import operation_log_fp, update_operation_fp
+from configuration import agent_config
 from util import append_data_to_file, BASE_API_URL, fetch_file_data, get_agent_state, logger
-from updater import update_repo_and_docker_image
+from versioning import update_repo_and_docker_image
 
 
 operations_map = {
@@ -21,7 +21,7 @@ operations_map = {
 async def init_operation(message: MessageTypeDef) -> PersistedOperation:
     operation = Operation.model_validate_json(message['Body'])
     initiated_operation = PersistedOperation(started=datetime.now(), operation=operation, status=OperationResultStatus.PENDING)
-    await append_data_to_file(operation_log_fp, initiated_operation.model_dump_json() + '\n')
+    await append_data_to_file(agent_config.operation_log_fp, initiated_operation.model_dump_json() + '\n')
     return initiated_operation
 
 
@@ -40,14 +40,14 @@ async def send_operation_result(operation: PersistedOperation, output: Operation
 
 
 async def complete_operation(operation: PersistedOperation, output: OperationResult) -> None:
-    await append_data_to_file(operation_log_fp, operation.model_dump_json() + '\n')
+    await append_data_to_file(agent_config.operation_log_fp, operation.model_dump_json() + '\n')
     await send_operation_result(operation, output)
 
 
 async def fetch_update_operation() -> Optional[PersistedOperation]:
-    data = await fetch_file_data(update_operation_fp)
+    data = await fetch_file_data(agent_config.update_operation_fp)
     if data is not None:
-        os.remove(update_operation_fp)
+        os.remove(agent_config.update_operation_fp)
         return PersistedOperation.model_validate_json(data)
     else:
         return None

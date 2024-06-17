@@ -2,7 +2,7 @@ import asyncio
 
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
-import fs_util
+import initialize
 from operations.operations_util import complete_operation, operations_map, init_operation
 from agent import startup
 from models import AgentState
@@ -47,7 +47,7 @@ async def listen_to_queue(agent_state: AgentState) -> None:
 
 
 async def async_main() -> None:
-    fs_util.validate_fs()
+    initialize.validate_fs()
     await startup()
     agent_state = await get_agent_state()
     await listen_to_queue(agent_state)

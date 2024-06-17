@@ -1,3 +1,0 @@
-aws-cdk-lib
-cdk-ecr-deployment
-boto3
