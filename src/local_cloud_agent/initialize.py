@@ -17,7 +17,7 @@ def validate_fs():
     if not os.path.exists(agent_config.aws_creds_fp):
         home_list = os.listdir(agent_config.home_dir)
         base_msg = 'AWS credentials not found. Please run `aws configure` to set up your credentials.'
-        home_msg = f'Home Dir: {agent_config.home_dir}, Files: {home_list}'
+        home_msg = f'Could not find {agent_config.aws_creds_fp}'
         msg = '\n'.join([base_msg, home_msg])
         raise RuntimeError(msg)
 

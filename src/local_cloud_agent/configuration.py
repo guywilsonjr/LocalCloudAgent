@@ -1,6 +1,6 @@
+# Must use minimal imports to avoid circular imports
 import os
 import yaml
-import pydantic
 from pydantic import BaseModel, Field
 
 

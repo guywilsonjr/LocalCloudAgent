@@ -5,9 +5,10 @@ import aiohttp
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus, OperationType, UpdateOperationResultRequest
 from types_aiobotocore_sqs.type_defs import MessageTypeDef
 
+from agent import get_agent_state
 from models import PersistedOperation
 from configuration import agent_config
-from util import append_data_to_file, BASE_API_URL, get_agent_state, logger
+from util import append_data_to_file, BASE_API_URL, logger
 from versioning import update_repo_and_docker_image
 
 

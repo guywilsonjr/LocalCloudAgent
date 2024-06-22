@@ -1,11 +1,33 @@
+from typing import Tuple
+
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
-from git import Git, Repo
+from git import Git, Repo, TagReference
 
 from configuration import repo_url, agent_config
 from models import PersistedOperation
 from util import logger, write_data_to_file
 
 
+def get_latest_tag() -> TagReference:
+    repo = Repo('.')
+    tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+    latest_tag = tags[-1]
+    return latest_tag
+
+
+def get_base_tag_version(tag: TagReference) -> Tuple[int, int, int]:
+    if '-' in tag.name:
+        period_separated_vers = tag.name.split('-')[0][1:]
+    else:
+        period_separated_vers = tag.name[1:]
+    return tuple(map(int, period_separated_vers.split('.')))
+
+
+def get_release_candidate_version(tag: TagReference) -> int:
+    if '-' in tag.name:
+        return int(tag.name.split('-')[1][2:])
+    else:
+        return None
 
 
 def get_latest_available_version() -> str:
