@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 
+import pytest
 import pytest_asyncio
 from git import Repo
 
@@ -32,7 +33,7 @@ def create_test_repo():
         Repo.clone_from(constants.repo_url, agent_config.repo_dir)
 
 
-@pytest_asyncio.fixture(scope='session')
+@pytest.fixture(scope='session')
 def setup_file_system():
     os.makedirs(agent_config.log_dir, exist_ok=True)
     os.makedirs(agent_config.home_dir, exist_ok=True)
