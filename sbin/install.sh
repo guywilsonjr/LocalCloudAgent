@@ -7,6 +7,6 @@ mkdir -p /etc/$KEYWORD
 mkdir -p /var/log/$KEYWORD
 cp /usr/local/LocalCloudAgent/conf/local_cloud_agent.service /etc/systemd/system/
 cp /usr/local/LocalCloudAgent/conf/agent_config.yml /etc/local_cloud_agent/agent_config.yml
-python3.12 -m venv /usr/local/LocalCloudAgent/.venv
+python3.12 -m venv /usr/local/LocalCloudAgent/.venv --upgrade-deps
 /usr/local/LocalCloudAgent/.venv/bin/pip install -r /usr/local/LocalCloudAgent/requirements.txt
 systemctl daemon-reload

@@ -42,5 +42,3 @@ async def complete_operation(operation: PersistedOperation, output: OperationRes
     await append_data_to_file(agent_config.operation_log_fp, operation.model_dump_json() + '\n')
     await send_operation_result(operation, output)
 
-
-

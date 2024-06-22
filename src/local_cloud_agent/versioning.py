@@ -9,7 +9,7 @@ from util import logger, write_data_to_file
 
 
 def get_latest_tag() -> TagReference:
-    repo = Repo('.')
+    repo = Repo(agent_config.repo_dir)
     tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
     latest_tag = tags[-1]
     return latest_tag
