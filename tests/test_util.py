@@ -1,18 +1,26 @@
-import logging
+import os
+import string
+import random
 
 import pytest
-from cumulonimbus_models.agent import AgentRegisterResponse
 from test_common import setup_file_system
-logger = logging.getLogger(__name__)
 
 
 @pytest.mark.asyncio
-async def test_get_registration(setup_file_system):
+async def test_file_ops(setup_file_system):
+    test_fp = 'tests/.testfs/test.txt'
     import util
-    resp = await util.get_registration()
-    assert resp == AgentRegisterResponse(
-        agent_id='test-agent-id',
-        agent_key='test-agent-key',
-        ip_address='000.000.000.000',
-        operations_queue_url='https://sqs.us-west-1.amazonaws.com/012345678901/test'
-    )
+    first_char = random.choice(string.ascii_letters)
+    second_char = random.choice(string.ascii_letters)
+    await util.append_data_to_file(test_fp, first_char)
+    first_read = await util.fetch_file_data(test_fp)
+    assert first_read == first_char
+    await util.append_data_to_file(test_fp, second_char)
+    second_read = await util.fetch_file_data(test_fp)
+    assert second_read == first_char + second_char
+
+    await util.write_data_to_file(test_fp, first_char)
+    third_read = await util.fetch_file_data(test_fp)
+    assert third_read == first_char
+    os.remove(test_fp)
+

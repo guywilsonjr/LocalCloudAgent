@@ -3,7 +3,7 @@ aioboto3
 aiofile
 aws-lambda-powertools
 cryptography
-cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.0.1-rc0
+cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1,
 docker
 GitPython
 pydantic

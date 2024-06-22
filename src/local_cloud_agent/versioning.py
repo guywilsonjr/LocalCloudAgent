@@ -2,10 +2,11 @@ from typing import Tuple
 
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 from git import Git, Repo, TagReference
-
-from configuration import repo_url, agent_config
+from initialize import logger
+import constants
+from configuration import agent_config
 from models import PersistedOperation
-from util import logger, write_data_to_file
+from util import write_data_to_file
 
 
 def get_latest_tag() -> TagReference:
@@ -32,7 +33,7 @@ def get_release_candidate_version(tag: TagReference) -> int:
 
 def get_latest_available_version() -> str:
     git_cmd = Git()
-    resp = git_cmd.ls_remote(repo_url, sort='v:refname')
+    resp = git_cmd.ls_remote(constants.repo_url, sort='v:refname')
     resp_lines = resp.split('\n')
     valid_entries = [line for line in resp_lines if '{}' not in line and 'HEAD' not in line]
     latest_entry = valid_entries[-1]

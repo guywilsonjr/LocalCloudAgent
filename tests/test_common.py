@@ -3,7 +3,10 @@ import os
 import shutil
 
 import pytest_asyncio
+from git import Repo
+
 from configuration import agent_config
+import constants
 
 
 def rmfile(path):
@@ -21,11 +24,19 @@ def rmtree(path):
         shutil.rmtree(path)
 
 
+
+def create_test_repo():
+    if not os.path.exists(agent_config.repo_dir):
+        if 'LOCAL_CLOUD_AGENT_CONF_PATH' not in os.environ:
+            raise RuntimeError('LOCAL_CLOUD_AGENT_CONF_PATH not set')
+        Repo.clone_from(constants.repo_url, agent_config.repo_dir)
+
+
 @pytest_asyncio.fixture(scope='session')
 def setup_file_system():
     os.makedirs(agent_config.log_dir, exist_ok=True)
     os.makedirs(agent_config.home_dir, exist_ok=True)
-    os.makedirs(agent_config.repo_dir, exist_ok=True)
+    create_test_repo()
 
     os.makedirs(agent_config.aws_dir, exist_ok=True)
     with open(agent_config.aws_creds_fp, 'w') as f:

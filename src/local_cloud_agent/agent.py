@@ -5,10 +5,10 @@ import socket
 import aiohttp
 from cumulonimbus_models.agent import AgentRegisterRequest, AgentRegisterResponse
 from tenacity import before_log, retry, wait_exponential
-
+from initialize import logger
 from configuration import agent_config
 from models import AgentState
-from util import BASE_API_URL, fetch_file_data, logger, write_data_to_file
+from util import BASE_API_URL, fetch_file_data, write_data_to_file
 from versioning import get_latest_tag
 
 

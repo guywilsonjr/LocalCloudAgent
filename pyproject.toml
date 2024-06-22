@@ -1,5 +1,4 @@
 [project]
-
 name = "local-cloud-agent"
 requires-python = ">=3.10"
 dynamic = ["dependencies", "version"]
@@ -11,8 +10,6 @@ authors = [
 maintainers = [
     { name = "Guy Wilson", email = "guywilsonjr@gmail.com" },
 ]
-
-
 classifiers = [
     # How mature is this project? Common values are
     #   3 - Alpha
@@ -37,10 +34,35 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 
+
+[tool.pytest.ini_options]
+addopts = "-svvv"
+log_cli = "true"
+log_cli_level = "INFO"
+pythonpath = "src/local_cloud_agent"
+[tool.pytest_env]
+LOCAL_CLOUD_AGENT_CONF_PATH = "tests/agent_conf.yml"
+testpaths = [
+    "tests/test_main.py"
+]
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py312
+
+[testenv]
+deps =
+    -rrequirements-test.txt
+commands =
+    pytest
+"""
+
 [tool.setuptools_scm]
 
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
+
+
 
 [tool.mypy]
 plugins = [
@@ -56,7 +78,6 @@ no_implicit_reexport = true
 
 # for strict mypy: (this is the tricky one :-))
 disallow_untyped_defs = true
-
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true

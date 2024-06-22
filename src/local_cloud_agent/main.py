@@ -6,7 +6,8 @@ import initialize
 from operations.operations_util import complete_operation, operations_map, init_operation
 from agent import get_agent_state, startup
 from models import AgentState
-from util import logger, aiosession
+from util import aiosession
+from initialize import logger
 
 
 async def listen_to_queue(agent_state: AgentState) -> None:

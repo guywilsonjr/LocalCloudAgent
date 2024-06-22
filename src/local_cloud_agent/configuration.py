@@ -1,5 +1,6 @@
 # Must use minimal imports to avoid circular imports
 import os
+
 import yaml
 from pydantic import BaseModel, Field
 
@@ -32,7 +33,7 @@ class AgentConfig(BaseModel):
 
     @property
     def agent_log_fp(self):
-        return f'{self.log_dir}/agent.log'
+        return f'{self.log_dir}/local_cloud_agent.log'
 
     @property
     def operation_log_fp(self):
@@ -44,9 +45,10 @@ class AgentConfig(BaseModel):
 
 
 conf_path = os.environ.get('LOCAL_CLOUD_AGENT_CONF_PATH', '/etc/local_cloud_agent/agent_config.yml')
+print(conf_path)
+print('Exists: ',  os.path.exists(conf_path))
 with open(conf_path, 'r') as conf_file:
     conf = yaml.safe_load(conf_file)
 
 
 agent_config = AgentConfig(**conf)
-repo_url = 'https://github.com/guywilsonjr/LocalCloudAgent'
