@@ -3,7 +3,6 @@ import os
 import shutil
 
 import pytest
-import pytest_asyncio
 from git import Repo
 
 from configuration import agent_config

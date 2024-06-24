@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import sys
@@ -25,11 +26,16 @@ def validate_fs():
         raise RuntimeError(msg)
 
 
+def serialize_log(json_data: dict) -> str:
+    return json.dumps(json_data, indent=2)
+
+
 logger = Logger(
     service='LocalCloudAgent',
     level=logging.INFO,
     logger_handler=logging.FileHandler(agent_config.agent_log_fp),
-    log_uncaught_exceptions=True
+    log_uncaught_exceptions=True,
+    json_serializer=serialize_log
 )
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
