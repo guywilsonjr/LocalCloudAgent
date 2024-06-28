@@ -1,6 +1,6 @@
 import pytest
 from cumulonimbus_models.agent import AgentRegisterResponse
-from tests.common.test_common import setup_file_system
+from tests.test_common.test_fixtures import setup_file_system
 
 
 @pytest.mark.asyncio
