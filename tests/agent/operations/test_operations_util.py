@@ -4,7 +4,7 @@ import pytest
 from types_aiobotocore_sqs.type_defs import MessageTypeDef
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus, OperationType
 
-from agent.models import PersistedOperation
+from agent.models import AgentState, PersistedOperation
 from agent.configuration import agent_config
 from tests.test_common.test_fixtures import setup_file_system, rmfile
 
@@ -43,45 +43,6 @@ async def test_init_operation(setup_file_system):
     rmfile(agent_config.operation_log_fp)
 
 
-class MockResponse:
-    def __init__(self):
-        self.status = 200
-
-    async def __aexit__(self, exc_type, exc, tb):
-        pass
-
-    async def __aenter__(self):
-        return self
 
 
-@pytest.mark.asyncio
-async def test_send_operation_result(setup_file_system, mocker):
-    test_persist_op = PersistedOperation(
-        started=datetime.now(),
-        operation=test_op,
-        status=OperationResultStatus.PENDING
-    )
-    test_output = OperationResult(operation_output='SUCCESS', operation_status=OperationResultStatus.SUCCESS)
-
-    resp = MockResponse()
-    a = mocker.patch('aiohttp.ClientSession.patch', return_value=resp)
-    from agent.operations import util
-    await util.send_operation_result(test_persist_op, test_output)
-    a.assert_called_once()
-
-
-@pytest.mark.asyncio
-async def test_complete_operation(setup_file_system, mocker):
-    test_persist_op = PersistedOperation(
-        started=datetime.now(),
-        operation=test_op,
-        status=OperationResultStatus.PENDING
-    )
-    test_output = OperationResult(operation_output='SUCCESS', operation_status=OperationResultStatus.SUCCESS)
-
-    resp = MockResponse()
-    a = mocker.patch('aiohttp.ClientSession.patch', return_value=resp)
-    from agent.operations import util
-    await util.send_operation_result(test_persist_op, test_output)
-    a.assert_called_once()
 

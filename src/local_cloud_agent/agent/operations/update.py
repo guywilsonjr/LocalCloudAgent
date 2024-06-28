@@ -8,7 +8,7 @@ from agent.util import write_data_to_file, fetch_file_data
 from common import constants, systemd
 
 
-async def check_systemd_service():
+async def check_systemd_service() -> None:
     logger.info('Checking Systemd Service')
     ref_systemd_conf = await fetch_file_data(agent_config.repo_service_fp)
     repo_systemd_conf = await fetch_file_data(agent_config.installed_service_fn)
@@ -20,7 +20,7 @@ async def check_systemd_service():
         logger.info('Systemd Service File is up to date')
 
 
-async def systemd_update():
+async def systemd_update() -> None:
     logger.info('Updating Systemd Service File')
     ref_conf_path = '/'.join([agent_config.repo_dir, constants.relative_service_file_path])
     shutil.copyfile(ref_conf_path, constants.service_fn)

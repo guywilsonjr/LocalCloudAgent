@@ -7,6 +7,7 @@ import pytest
 from git import Repo
 
 from agent.configuration import agent_config
+from agent.versioning import VersionInfo
 from common import constants
 
 
@@ -36,6 +37,24 @@ def create_test_repo():
 logging.info(f'Setting up test file system at: {agent_config.fs_root_path}')
 
 
+
+test_agent_id = 'test-agent-id'
+test_operations_queue_url = 'https://sqs.us-west-1.amazonaws.com/012345678901/test'
+test_agent_key = 'test-agent-key'
+test_ip_address = '000.000.000.000'
+test_major_version = 0
+test_minor_version = 0
+test_patch_version = 0
+test_rc_version = 10
+test_version_info = VersionInfo(
+    major=test_major_version,
+    minor=test_minor_version,
+    patch=test_patch_version,
+    release_candidate=test_rc_version
+)
+test_version = str(test_version_info)
+
+
 # Note typical installation includes systemd service file, which is not included in this test setup
 @pytest.fixture(scope='session')
 def setup_file_system():
@@ -56,10 +75,11 @@ def setup_file_system():
         f.write(
             json.dumps(
                 {
-                    "agent_id": "test-agent-id",
-                    "agent_key": "test-agent-key",
-                    "ip_address": "000.000.000.000",
-                    "operations_queue_url": "https://sqs.us-west-1.amazonaws.com/012345678901/test"
+                    'agent_id': test_agent_id,
+                    'operations_queue_url': test_operations_queue_url,
+                    'version': test_version,
+                    'agent_key': test_agent_key, # TODO: This is not used in the agent
+                    'ip_address': test_ip_address  # TODO: This is not used in the agent
                 }
             )
         )

@@ -1,11 +1,35 @@
-import json
-import logging
 import os
-import sys
 
-from aws_lambda_powertools import Logger
+from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
 from agent.configuration import agent_config
+from agent.models import PersistedOperation
+from agent.operations.post_ops import complete_operation
+from agent.post_config import logger
+from agent.util import fetch_file_data
+from agent.versioning import get_latest_tag
+
+
+async def check_for_updates() -> None:
+    update_data_str = await fetch_file_data(agent_config.update_operation_fp)
+    if update_data_str:
+        operation = PersistedOperation.model_validate_json(update_data_str)
+        logger.info('Found Update Operation')
+        logger.info(operation)
+
+        result = OperationResult(
+            operation_output='SUCCESS',
+            operation_status=OperationResultStatus.SUCCESS
+        )
+        await complete_operation(operation, result)
+
+
+async def startup():
+    version = get_latest_tag().name
+    logger.info(f'Starting Local Cloud Agent version: {version}')
+    logger.info(f'Using Agent Config:')
+    logger.info(agent_config.model_dump())
+    await check_for_updates()
 
 
 def ensure_dirs_exist():
@@ -26,16 +50,4 @@ def validate_fs():
         raise RuntimeError(msg)
 
 
-def serialize_log(json_data: dict) -> str:
-    return json.dumps(json_data, indent=2)
-
-
-logger = Logger(
-    service='LocalCloudAgent',
-    level=logging.INFO,
-    logger_handler=logging.FileHandler(agent_config.agent_log_fp),
-    log_uncaught_exceptions=True,
-    json_serializer=serialize_log
-)
-logger.addHandler(logging.StreamHandler(sys.stdout))
 
