@@ -5,7 +5,7 @@ import sys
 
 from aws_lambda_powertools import Logger
 
-from local_cloud_agent.agent.configuration import agent_config
+from agent.configuration import agent_config
 
 
 def ensure_dirs_exist():

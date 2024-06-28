@@ -5,11 +5,11 @@ import socket
 import aiohttp
 from cumulonimbus_models.agent import AgentRegisterRequest, AgentRegisterResponse
 from tenacity import before_log, retry, wait_exponential
-from local_cloud_agent.agent.initialize import logger
-from local_cloud_agent.agent.configuration import agent_config
-from local_cloud_agent.agent.models import AgentState
-from local_cloud_agent.agent.util import BASE_API_URL, fetch_file_data, write_data_to_file
-from local_cloud_agent.agent.versioning import get_latest_tag
+from agent.initialize import logger
+from agent.configuration import agent_config
+from agent.models import AgentState
+from agent.util import BASE_API_URL, fetch_file_data, write_data_to_file
+from agent.versioning import get_latest_tag
 
 
 async def startup():

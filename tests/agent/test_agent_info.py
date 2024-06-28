@@ -5,7 +5,7 @@ from tests.test_common.test_fixtures import setup_file_system
 
 @pytest.mark.asyncio
 async def test_get_registration(setup_file_system):
-    from local_cloud_agent.agent import agent_info
+    from agent import agent_info
     resp = await agent_info.get_registration()
     assert resp == AgentRegisterResponse(
         agent_id='test-agent-id',
@@ -17,6 +17,6 @@ async def test_get_registration(setup_file_system):
 
 @pytest.mark.asyncio
 async def test_startup(setup_file_system):
-    from local_cloud_agent.agent import agent_info
+    from agent import agent_info
     await agent_info.startup()
 

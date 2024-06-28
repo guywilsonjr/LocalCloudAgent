@@ -1,17 +1,18 @@
 import shutil
 from git import Repo
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
-from local_cloud_agent.agent.configuration import agent_config
-from local_cloud_agent.agent.initialize import logger
-from local_cloud_agent.agent.models import PersistedOperation
-from local_cloud_agent.agent.util import write_data_to_file, fetch_file_data
-from local_cloud_agent.common import constants, systemd
+from agent.configuration import agent_config
+from agent.initialize import logger
+from agent.models import PersistedOperation
+from agent.util import write_data_to_file, fetch_file_data
+from common import constants, systemd
 
 
 async def check_systemd_service():
     logger.info('Checking Systemd Service')
-    ref_systemd_conf = await fetch_file_data('/'.join([agent_config.repo_dir, constants.relative_service_file_path]))
-    repo_systemd_conf = await fetch_file_data(constants.service_fn)
+    ref_systemd_conf = await fetch_file_data(agent_config.repo_service_fp)
+    repo_systemd_conf = await fetch_file_data(agent_config.installed_service_fn)
+
     if ref_systemd_conf != repo_systemd_conf:
         logger.info('Found updated Systemd Service File')
         await systemd_update()

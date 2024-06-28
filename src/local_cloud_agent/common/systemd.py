@@ -1,6 +1,6 @@
 from pysystemd import ServiceManager
 
-from local_cloud_agent.common import constants
+from common import constants
 
 
 def reload_systemd():

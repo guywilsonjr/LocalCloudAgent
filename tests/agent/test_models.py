@@ -4,7 +4,7 @@ from cumulonimbus_models.operations import Operation, OperationResultStatus, Ope
 
 
 def test_models():
-    from local_cloud_agent.agent import models
+    from agent import models
     assert models.AgentState(
         agent_id='test-agent-id',
         queue_url='test-queue-url',

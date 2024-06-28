@@ -6,8 +6,8 @@ import shutil
 import pytest
 from git import Repo
 
-from local_cloud_agent.agent.configuration import agent_config
-from local_cloud_agent.common import constants
+from agent.configuration import agent_config
+from common import constants
 
 
 def rmfile(path):
@@ -36,6 +36,7 @@ def create_test_repo():
 logging.info(f'Setting up test file system at: {agent_config.fs_root_path}')
 
 
+# Note typical installation includes systemd service file, which is not included in this test setup
 @pytest.fixture(scope='session')
 def setup_file_system():
     pending_dir_creations = {
@@ -46,12 +47,8 @@ def setup_file_system():
         'OperationsDir': agent_config.operations_dir,
         'AgentDir': agent_config.agent_dir
     }
-
     [os.makedirs(pendir, exist_ok=True) for pendir in pending_dir_creations.values()]
-
     create_test_repo()
-
-
     with open(agent_config.aws_creds_fp, 'w') as f:
         f.write('')
 

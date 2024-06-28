@@ -4,8 +4,8 @@ import pytest
 from types_aiobotocore_sqs.type_defs import MessageTypeDef
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus, OperationType
 
-from local_cloud_agent.agent.models import PersistedOperation
-from local_cloud_agent.agent.configuration import agent_config
+from agent.models import PersistedOperation
+from agent.configuration import agent_config
 from tests.test_common.test_fixtures import setup_file_system, rmfile
 
 
@@ -27,7 +27,7 @@ async def test_init_operation(setup_file_system):
     )
     with open(agent_config.operation_log_fp, 'w') as f:
         f.write(test_persist_op.model_dump_json() + '\n')
-    from local_cloud_agent.agent.operations import util
+    from agent.operations import util
     test_msg = MessageTypeDef(
         MessageId='test-message-id',
         Body=test_op.model_dump_json()
@@ -65,7 +65,7 @@ async def test_send_operation_result(setup_file_system, mocker):
 
     resp = MockResponse()
     a = mocker.patch('aiohttp.ClientSession.patch', return_value=resp)
-    from local_cloud_agent.agent.operations import util
+    from agent.operations import util
     await util.send_operation_result(test_persist_op, test_output)
     a.assert_called_once()
 
@@ -81,7 +81,7 @@ async def test_complete_operation(setup_file_system, mocker):
 
     resp = MockResponse()
     a = mocker.patch('aiohttp.ClientSession.patch', return_value=resp)
-    from local_cloud_agent.agent.operations import util
+    from agent.operations import util
     await util.send_operation_result(test_persist_op, test_output)
     a.assert_called_once()
 

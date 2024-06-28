@@ -40,6 +40,7 @@ asyncio_mode = "strict"
 addopts = "-svvv"
 log_cli = "true"
 log_cli_level = "INFO"
+pythonpath = "src/local_cloud_agent"
 [tool.pytest_env]
 LOCAL_CLOUD_AGENT_CONF_PATH = "tests/agent_conf.yml"
 FS_ROOT_PATH = "tests/.testfs"

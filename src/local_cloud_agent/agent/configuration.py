@@ -2,7 +2,7 @@
 import os
 import yaml
 from pydantic import BaseModel, Field
-from local_cloud_agent.common import constants
+from common import constants
 
 
 fs_root_path = os.environ.get('FS_ROOT_PATH', '')
@@ -24,6 +24,8 @@ class AgentConfig(BaseModel):
     agent_log_fp: str = f'{fs_root_path}{constants.install_log_dir}/local_cloud_agent.log'
     operation_log_fp: str = f'{operations_dir}/operations.log'
     update_operation_fp: str = f'{operations_dir}/update.json'
+    repo_service_fp: str = f"{'/'.join([repo_dir, constants.relative_service_file_path])}"
+    installed_service_fn: str = f'{fs_root_path}{constants.service_fn}'
 
 
 

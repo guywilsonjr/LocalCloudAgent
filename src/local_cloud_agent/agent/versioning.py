@@ -1,8 +1,8 @@
 from typing import Tuple
 
 from git import Git, Repo, TagReference
-from local_cloud_agent.common import constants
-from local_cloud_agent.agent.configuration import agent_config
+from common import constants
+from agent.configuration import agent_config
 
 
 def get_latest_tag() -> TagReference:
