@@ -4,16 +4,16 @@ from datetime import datetime
 import aiohttp
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus, OperationType, UpdateOperationResultRequest
 from types_aiobotocore_sqs.type_defs import MessageTypeDef
-from initialize import logger
-from agent import get_agent_state
-from models import PersistedOperation
-from configuration import agent_config
-from util import append_data_to_file, BASE_API_URL
-from versioning import update_repo_and_docker_image
+from local_cloud_agent.agent.initialize import logger
+from local_cloud_agent.agent.agent_info import get_agent_state
+from local_cloud_agent.agent.models import PersistedOperation
+from local_cloud_agent.agent.configuration import agent_config
+from local_cloud_agent.agent.util import append_data_to_file, BASE_API_URL
+from local_cloud_agent.agent.operations.update import update_repository
 
 
 operations_map = {
-    OperationType.UPDATE: update_repo_and_docker_image
+    OperationType.UPDATE: update_repository
 }
 
 

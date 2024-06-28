@@ -2,11 +2,13 @@ aiohttp
 aioboto3
 aiofile
 aws-lambda-powertools
+click
 cryptography
-cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1,
+cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1
 docker
 GitPython
 pydantic
+pysystemd
+PyYAML
 tenacity
 types-aioboto3[sqs]
-PyYAML

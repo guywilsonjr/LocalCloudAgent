@@ -1,12 +1,13 @@
 import json
+import logging
 import os
 import shutil
 
 import pytest
 from git import Repo
 
-from configuration import agent_config
-import constants
+from local_cloud_agent.agent.configuration import agent_config
+from local_cloud_agent.common import constants
 
 
 def rmfile(path):
@@ -32,19 +33,28 @@ def create_test_repo():
         Repo.clone_from(constants.repo_url, agent_config.repo_dir)
 
 
+logging.info(f'Setting up test file system at: {agent_config.fs_root_path}')
+
+
 @pytest.fixture(scope='session')
 def setup_file_system():
-    os.makedirs(agent_config.log_dir, exist_ok=True)
-    os.makedirs(agent_config.home_dir, exist_ok=True)
+    pending_dir_creations = {
+        'LogDir': agent_config.log_dir,
+        'HomeDir': agent_config.home_dir,
+        'AwsDir': agent_config.aws_dir,
+        'MetadataDir': agent_config.metadata_dir,
+        'OperationsDir': agent_config.operations_dir,
+        'AgentDir': agent_config.agent_dir
+    }
+
+    [os.makedirs(pendir, exist_ok=True) for pendir in pending_dir_creations.values()]
+
     create_test_repo()
 
-    os.makedirs(agent_config.aws_dir, exist_ok=True)
+
     with open(agent_config.aws_creds_fp, 'w') as f:
         f.write('')
 
-    os.makedirs(agent_config.local_cloud_agent_dir, exist_ok=True)
-    os.makedirs(agent_config.operations_dir, exist_ok=True)
-    os.makedirs(agent_config.agent_dir, exist_ok=True)
     with open(agent_config.agent_registration_fp, 'w') as f:
         f.write(
             json.dumps(
@@ -59,7 +69,7 @@ def setup_file_system():
         f.write('\n')
 
     yield None
-    rmtree('tests/.testfs')
+    rmtree(agent_config.fs_root_path)
 
 
 

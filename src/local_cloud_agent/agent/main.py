@@ -3,8 +3,8 @@ import asyncio
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
 import initialize
-from operations.operations_util import complete_operation, operations_map, init_operation
-from agent import get_agent_state, startup
+from operations.util import complete_operation, operations_map, init_operation
+from agent.agent_info import get_agent_state, startup
 from models import AgentState
 from util import aiosession
 from initialize import logger
@@ -42,7 +42,6 @@ async def listen_to_queue(agent_state: AgentState) -> None:
                     if operation.operation.type == 'UPDATE':
                         logger.info('Update Complete. Restarting')
                         exit(0)
-
             else:
                 await asyncio.sleep(60)
 
