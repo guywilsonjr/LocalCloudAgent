@@ -2,7 +2,7 @@ import json
 import logging
 import sys
 from aws_lambda_powertools import Logger
-from agent.configuration import agent_config
+from common.configuration import agent_config
 
 
 def serialize_log(json_data: dict) -> str:

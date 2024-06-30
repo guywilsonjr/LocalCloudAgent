@@ -1,9 +1,9 @@
 import shutil
 from git import Repo
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
-from agent.configuration import agent_config
+from common.configuration import agent_config
 from agent.initialize import logger
-from agent.models import PersistedOperation
+from agent.models import AgentOperation, AgentOperationResult
 from agent.util import write_data_to_file, fetch_file_data
 from common import constants, systemd
 
@@ -22,12 +22,12 @@ async def check_systemd_service() -> None:
 
 async def systemd_update() -> None:
     logger.info('Updating Systemd Service File')
-    ref_conf_path = '/'.join([agent_config.repo_dir, constants.relative_service_file_path])
+    ref_conf_path = '/'.join([agent_config.repo_dir, constants.repo_service_fp])
     shutil.copyfile(ref_conf_path, constants.service_fn)
     systemd.reload_systemd()
 
 
-async def update_repository(operation: PersistedOperation) -> OperationResult:
+async def update_repository(operation: AgentOperation) -> AgentOperationResult:
     logger.info('Updating Repository')
     #TODO ACTUALLY READ FROM THIS FILE and finish sytemd stuff
     await write_data_to_file(agent_config.update_operation_fp, operation.model_dump_json())
@@ -35,7 +35,10 @@ async def update_repository(operation: PersistedOperation) -> OperationResult:
     repo = Repo(agent_config.repo_dir)
     remote = repo.remote()
     remote.pull()
-    return OperationResult(
-        operation_output='SUCCESS',
-        operation_status=OperationResultStatus.SUCCESS
+    return AgentOperationResult(
+        operation_result=OperationResult(
+            operation_output='SUCCESS',
+            operation_status=OperationResultStatus.SUCCESS
+        )
     )
+

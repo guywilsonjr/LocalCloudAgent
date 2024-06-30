@@ -2,11 +2,11 @@ import pytest
 from cumulonimbus_models.agent import AgentRegisterResponse
 
 from agent.models import AgentState
-from tests.test_common.test_fixtures import setup_file_system, test_agent_id, test_operations_queue_url, test_version
+from tests.test_common.test_fixtures import test_agent_id, test_operations_queue_url, test_version, setup_file_system
 
 
 @pytest.mark.asyncio
-async def test_get_registration(setup_file_system):
+async def test_get_registration():
     from agent import agent_info
     resp = await agent_info.get_registration()
     assert resp == AgentRegisterResponse(

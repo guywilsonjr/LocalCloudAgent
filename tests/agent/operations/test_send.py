@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus, OperationType
 
-from agent.models import AgentState, PersistedOperation
+from agent.models import AgentState, AgentOperation
 from tests.test_common.test_fixtures import setup_file_system
 
 
@@ -28,7 +28,7 @@ test_op = Operation(
 
 @pytest.mark.asyncio
 async def test_send_operation_result(setup_file_system, mocker):
-    test_persist_op = PersistedOperation(
+    test_persist_op = AgentOperation(
         started=datetime.now(),
         operation=test_op,
         status=OperationResultStatus.PENDING

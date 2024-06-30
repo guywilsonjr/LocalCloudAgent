@@ -4,7 +4,7 @@ from git import Git, Repo, TagReference
 from pydantic import BaseModel
 
 from common import constants
-from agent.configuration import agent_config
+from common.configuration import agent_config
 
 
 class VersionInfo(BaseModel):

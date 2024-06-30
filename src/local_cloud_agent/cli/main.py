@@ -6,7 +6,7 @@ import venv
 import git
 import click
 
-from agent.configuration import agent_config
+from common.configuration import agent_config
 from common import constants, systemd
 
 
@@ -17,14 +17,16 @@ def main():
 
 @main.command()
 def install():
-    os.chdir(constants.repo_install_dir)
-    shutil.rmtree('/'.join([constants.repo_install_dir, 'LocalCloudAgent']))
+    os.chdir(constants.repo_install_parent_dir)
+    shutil.rmtree('/'.join([constants.repo_install_parent_dir, 'LocalCloudAgent']))
     git.Repo.clone_from(constants.repo_url, 'LocalCloudAgent', multi_options=['--depth', '1'])
     os.makedirs(constants.metadata_dir, exist_ok=True)
     os.makedirs(constants.install_conf_dir, exist_ok=True)
     os.makedirs(constants.install_log_dir, exist_ok=True)
-    repo_service_conf_path = '/'.join([agent_config.repo_dir, constants.relative_service_file_path])
+    repo_service_conf_path = '/'.join([agent_config.repo_dir, constants.repo_service_fp])
+    repo_agent_conf_path = '/'.join([agent_config.repo_dir, constants.repo_conf_path])
     shutil.copyfile(repo_service_conf_path, constants.service_fn)
+    shutil.copyfile(repo_agent_conf_path, constants.repo_conf_path)
     venv.create(
         env_dir=constants.venv_dir,
         system_site_packages=False,
@@ -37,8 +39,8 @@ def install():
 
 @main.command()
 def uninstall():
-    os.chdir(constants.repo_install_dir)
-    shutil.rmtree('/'.join([constants.repo_install_dir, 'LocalCloudAgent']))
+    os.chdir(constants.repo_install_parent_dir)
+    shutil.rmtree('/'.join([constants.repo_install_parent_dir, 'LocalCloudAgent']))
     '''''
     # If --purge
     os.remove(constants.metadata_dir)

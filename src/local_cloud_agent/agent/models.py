@@ -1,7 +1,8 @@
 from datetime import datetime
+from typing import Awaitable, Optional
 
-from cumulonimbus_models.operations import Operation, OperationResultStatus
-from pydantic import BaseModel
+from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus
+from pydantic import BaseModel, ConfigDict
 
 
 class AgentState(BaseModel):
@@ -10,11 +11,15 @@ class AgentState(BaseModel):
     version: str
 
 
-
-class PersistedOperation(BaseModel):
+class AgentOperation(BaseModel):
     started: datetime
     operation: Operation
     status: OperationResultStatus
 
+
+class AgentOperationResult(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    operation_result: OperationResult
+    post_op: Optional[Awaitable] = None
 
 

@@ -2,8 +2,8 @@ import os
 
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
-from agent.configuration import agent_config
-from agent.models import PersistedOperation
+from common.configuration import agent_config
+from agent.models import AgentOperation
 from agent.operations.post_ops import complete_operation
 from agent.post_config import logger
 from agent.util import fetch_file_data
@@ -13,7 +13,7 @@ from agent.versioning import get_latest_tag
 async def check_for_updates() -> None:
     update_data_str = await fetch_file_data(agent_config.update_operation_fp)
     if update_data_str:
-        operation = PersistedOperation.model_validate_json(update_data_str)
+        operation = AgentOperation.model_validate_json(update_data_str)
         logger.info('Found Update Operation')
         logger.info(operation)
 

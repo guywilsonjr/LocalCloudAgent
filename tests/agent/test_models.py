@@ -10,7 +10,7 @@ def test_models():
         queue_url='test-queue-url',
         version='test-version'
     )
-    assert models.PersistedOperation(
+    assert models.AgentOperation(
         started=datetime.now(),
         operation=Operation(id='test-operation-id', type=OperationType.UPDATE, parameters={}),
         status=OperationResultStatus.SUCCESS
