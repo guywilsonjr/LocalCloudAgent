@@ -19,6 +19,8 @@ aws_dir = f'{root_dir}/.aws'
 aws_creds_fp = f'{aws_dir}/credentials'
 agent_dir = f'{metadata_dir}/agent'
 repo_python_path = f'{installed_repo_dir}/src/{lower_keyword}'
+
+# TODO REMOVE FILE AND FILE USAGES AND REPLACE WITH CREATED FILE BELOW
 service_file_data = f'''[Unit]
 Description=Local Cloud Agent
 After=network.target

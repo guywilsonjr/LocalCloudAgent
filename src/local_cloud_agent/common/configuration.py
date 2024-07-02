@@ -8,43 +8,39 @@ from pydantic import BaseModel
 from common import constants
 
 
-fs_root_path = os.environ.get('FS_ROOT_PATH', '')
-
-
 class AgentConfig(BaseModel):
-    fs_root_path: ClassVar[str] = os.environ.get('FS_ROOT_PATH', '')
 
     @property
     def home_dir(self) -> str:
-        return f'{self.fs_root_path}{constants.root_dir}'
+        return f'{constants.root_dir}'
 
     @property
     def log_dir(self) -> str:
-        return f'{self.fs_root_path}{constants.install_log_dir}'
+        return f'{constants.install_log_dir}'
 
     @property
     def aws_dir(self) -> str:
-        return f'{self.fs_root_path}{constants.aws_dir}'
+        return f'{constants.aws_dir}'
 
     @property
     def repo_dir(self) -> str:
-        return f'{self.fs_root_path}{constants.installed_repo_dir}'
+        return f'{constants.installed_repo_dir}'
 
     @property
     def metadata_dir(self) -> str:
-        return f'{self.fs_root_path}{constants.metadata_dir}'
+        return f'{constants.metadata_dir}'
 
     @property
     def agent_dir(self) -> str:
-        return f'{self.fs_root_path}{constants.metadata_dir}/agent'
+        return f'{constants.metadata_dir}/agent'
 
     @property
     def operations_dir(self) -> str:
-        return f'{self.fs_root_path}{constants.metadata_dir}/operations'
+        return f'{constants.metadata_dir}/operations'
 
     @property
     def aws_creds_fp(self) -> str:
-        return f'{self.fs_root_path}{constants.aws_dir}/credentials'
+        return f'{constants.aws_dir}/credentials'
 
     @property
     def agent_registration_fp(self) -> str:
@@ -52,8 +48,7 @@ class AgentConfig(BaseModel):
 
     @property
     def agent_log_fp(self) -> str:
-        print('root path at agent log fp', self.fs_root_path)
-        return f'{self.fs_root_path}{constants.install_log_dir}/local_cloud_agent.log'
+        return f'{constants.install_log_dir}/local_cloud_agent.log'
 
     @property
     def operation_log_fp(self) -> str:
@@ -69,12 +64,25 @@ class AgentConfig(BaseModel):
 
     @property
     def installed_service_fn(self) -> str:
-        return f'{self.fs_root_path}{constants.service_fn}'
+        return f'{constants.service_fn}'
 
 
-conf_path = os.environ.get('LOCAL_CLOUD_AGENT_CONF_PATH', constants.install_conf_fp)
-with open(conf_path, 'r') as conf_file:
-    conf = yaml.safe_load(conf_file)
+agent_config = AgentConfig()
 
 
-agent_config = AgentConfig(**conf)
+def ensure_dirs_exist():
+    os.makedirs(agent_config.metadata_dir, exist_ok=True)
+    os.makedirs(agent_config.agent_dir, exist_ok=True)
+    os.makedirs(agent_config.operations_dir, exist_ok=True)
+
+
+def validate_fs():
+    ensure_dirs_exist()
+    if not os.path.exists(agent_config.repo_dir):
+        raise RuntimeError(f'Repo dir not found: {agent_config.repo_dir}')
+
+    if not os.path.exists(agent_config.aws_creds_fp):
+        base_msg = 'AWS credentials not found. Please run `aws configure` to set up your credentials.'
+        home_msg = f'Could not find {agent_config.aws_creds_fp}'
+        msg = '\n'.join([base_msg, home_msg])
+        raise RuntimeError(msg)

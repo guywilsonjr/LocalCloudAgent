@@ -3,13 +3,12 @@ import string
 import random
 
 import pytest
-from tests.test_common.test_fixtures import setup_file_system
+from tests.common_test.test_fixtures import setup_file_system
 
 
 @pytest.mark.asyncio
 async def test_util(setup_file_system):
-    from common.configuration import agent_config
-    test_fp = f'{agent_config.fs_root_path}/test.txt'
+    test_fp = f'test.txt'
     from agent import util
     first_char = random.choice(string.ascii_letters)
     second_char = random.choice(string.ascii_letters)

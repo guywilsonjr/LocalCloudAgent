@@ -4,4 +4,3 @@ export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account |  tr -d '"')
 alias ecrlogin='aws ecr get-login-password | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com'
 alias clean='rm -rf .tox build cdk.out .mypy_cache ./**/__pycahce__'
 export PYTHONPATH=$(pwd)/src/local_cloud_agent
-export LOCAL_CLOUD_AGENT_CONF_PATH=$(pwd)/conf/agent_config.yml

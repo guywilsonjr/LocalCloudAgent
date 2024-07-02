@@ -1,23 +1,15 @@
 from typing import Tuple
 
 from git import Git, Repo, TagReference
-from pydantic import BaseModel
 
+from agent.models import VersionInfo
+from agent.post_config import logger
 from common import constants
 from common.configuration import agent_config
 
 
-class VersionInfo(BaseModel):
-    major: int
-    minor: int
-    patch: int
-    release_candidate: int
-
-    def __str__(self):
-        return f'v{self.major}.{self.minor}.{self.patch}-rc{self.release_candidate}'
-
-
 def get_latest_tag() -> TagReference:
+    logger.info(f'Getting latest tag from repo: {agent_config.repo_dir}')
     repo = Repo(agent_config.repo_dir)
     tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
     latest_tag = tags[-1]

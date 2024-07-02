@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import sys
 from aws_lambda_powertools import Logger
 from common.configuration import agent_config
@@ -17,3 +18,6 @@ logger = Logger(
     json_serializer=serialize_log
 )
 logger.addHandler(logging.StreamHandler(sys.stdout))
+
+
+

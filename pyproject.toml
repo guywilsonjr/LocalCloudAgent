@@ -25,28 +25,33 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12"
 ]
+
 [project.urls]
 Homepage = "https://github.com/guywilsonjr/LocalCloudAgent"
 Repository = "https://github.com/guywilsonjr/LocalCloudAgent"
+
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 
-
 [tool.pytest.ini_options]
+tmp_path_retention_count = 1
+tmp_path_retention_policy = "failed"
 asyncio_mode = "strict"
 addopts = "-svvv"
 log_cli = "true"
 log_cli_level = "INFO"
 pythonpath = "src/local_cloud_agent"
+
 [tool.pytest_env]
-LOCAL_CLOUD_AGENT_CONF_PATH = "tests/agent_conf.yml"
 FS_ROOT_PATH = "tests/.testfs"
 testpaths = [
     "tests/test_main.py"
 ]
+
+
 [tool.tox]
 legacy_tox_ini = """
 [tox]
@@ -59,18 +64,13 @@ commands =
     python -m pytest -svvv --log-cli-level=INFO
 """
 
-[tool.setuptools_scm]
 
+[tool.setuptools_scm]
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
 
 
-
 [tool.mypy]
-plugins = [
-    "pydantic.mypy"
-]
-
 follow_imports = "silent"
 warn_redundant_casts = true
 warn_unused_ignores = true
@@ -80,6 +80,11 @@ no_implicit_reexport = true
 
 # for strict mypy: (this is the tricky one :-))
 disallow_untyped_defs = true
+
+plugins = [
+    "pydantic.mypy"
+]
+
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true

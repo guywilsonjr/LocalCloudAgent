@@ -1,4 +1,0 @@
-REPO_DIR: tests/.testfs/usr/local/LocalCloudAgent
-HOME_DIR: tests/.testfs/root
-LOG_DIR: tests/.testfs/var/log/LocalCloudAgent
-AWS_DIR: tests/.testfs/root/.aws

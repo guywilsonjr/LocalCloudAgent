@@ -1,8 +1,20 @@
+# Models should have minimal imports
+
 from datetime import datetime
 from typing import Awaitable, Optional
 
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus
 from pydantic import BaseModel, ConfigDict
+
+
+class VersionInfo(BaseModel):
+    major: int
+    minor: int
+    patch: int
+    release_candidate: int
+
+    def __str__(self):
+        return f'v{self.major}.{self.minor}.{self.patch}-rc{self.release_candidate}'
 
 
 class AgentState(BaseModel):

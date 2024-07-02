@@ -2,7 +2,6 @@ import os
 import shutil
 import subprocess
 import venv
-
 import git
 import click
 
@@ -10,9 +9,19 @@ from common.configuration import agent_config
 from common import constants, systemd
 
 
+if os.geteuid() != 0:
+    print('Please run as root.')
+    exit(0)
+
+
+def install_service():
+    with open(constants.service_fn, 'w') as f:
+        f.write(constants.service_file_data)
+
+
 @click.group()
 def main():
-    return
+    pass
 
 
 @main.command()
@@ -23,24 +32,22 @@ def install():
     os.makedirs(constants.metadata_dir, exist_ok=True)
     os.makedirs(constants.install_conf_dir, exist_ok=True)
     os.makedirs(constants.install_log_dir, exist_ok=True)
-    repo_service_conf_path = '/'.join([agent_config.repo_dir, constants.repo_service_fp])
-    repo_agent_conf_path = '/'.join([agent_config.repo_dir, constants.repo_conf_path])
-    shutil.copyfile(repo_service_conf_path, constants.service_fn)
-    shutil.copyfile(repo_agent_conf_path, constants.repo_conf_path)
+    install_service()
     venv.create(
         env_dir=constants.venv_dir,
         system_site_packages=False,
         with_pip=True,
         upgrade_deps=True
     )
-    subprocess.run(['.venv/bin/pip', 'install', '-r', '/'.join([agent_config.repo_dir, 'requirements.txt'])])
+    subprocess.run(['.venv/bin/pip', 'install', '-r', f'{agent_config.repo_dir}/requirements.txt'])
     systemd.reload_systemd()
 
 
 @main.command()
+@click.option('--purge', is_flag=True)
 def uninstall():
     os.chdir(constants.repo_install_parent_dir)
-    shutil.rmtree('/'.join([constants.repo_install_parent_dir, 'LocalCloudAgent']))
+    shutil.rmtree(f'{constants.repo_install_parent_dir}/LocalCloudAgent')
     '''''
     # If --purge
     os.remove(constants.metadata_dir)
