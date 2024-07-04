@@ -36,7 +36,7 @@ async def register_agent() -> AgentRegisterResponse:
 async def get_registration() -> AgentRegisterResponse:
     agent_data = await fetch_file_data(agent_config.agent_registration_fp)
     if agent_data is None:
-        logger.info(f'No registration found, registering agent. Found: {os.listdir(agent_config.agent_dir)}')
+        logger.info(f'No registration found at: {agent_config.agent_registration_fp}. Registering agent. Found: {os.listdir(agent_config.agent_dir)}')
         registration = await register_agent()
         logger.info(f'Registration complete for agent: {registration.agent_id}')
         return registration

@@ -7,21 +7,20 @@ import click
 
 from common.configuration import agent_config
 from common import constants, systemd
+import getpass
 
 
-if os.geteuid() != 0:
-    print('Please run as root.')
-    exit(0)
 
 
 def install_service():
-    with open(constants.service_fn, 'w') as f:
+    with open(constants.installed_service_conf_fp, 'w') as f:
         f.write(constants.service_file_data)
 
 
 @click.group()
 def main():
-    pass
+    if os.geteuid() != 0:
+        raise RuntimeError(getpass.getuser())
 
 
 @main.command()
@@ -30,7 +29,7 @@ def install():
     shutil.rmtree('/'.join([constants.repo_install_parent_dir, 'LocalCloudAgent']))
     git.Repo.clone_from(constants.repo_url, 'LocalCloudAgent', multi_options=['--depth', '1'])
     os.makedirs(constants.metadata_dir, exist_ok=True)
-    os.makedirs(constants.install_conf_dir, exist_ok=True)
+    os.makedirs(constants.install_agent_conf_dir, exist_ok=True)
     os.makedirs(constants.install_log_dir, exist_ok=True)
     install_service()
     venv.create(

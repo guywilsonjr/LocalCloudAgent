@@ -1,10 +1,10 @@
 import pytest
 from tests.common_test import test_constants
-from tests.common_test.test_fixtures import setup_file_system
 
 
+@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
 @pytest.mark.asyncio
-async def test_versioning(setup_file_system, mocker):
+async def test_versioning():
 
     import agent.versioning
     tag = agent.versioning.get_latest_tag()

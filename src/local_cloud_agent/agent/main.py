@@ -2,14 +2,14 @@ import asyncio
 
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
-import initialize
+from agent import initialize
 from agent.operations.post_ops import complete_operation
-from operations.util import init_operation
-from operations.ops import operations_map
+from agent.operations.util import init_operation
+from agent.operations.ops import operations_map
 from agent.agent_info import get_agent_state
-from models import AgentOperationResult, AgentState
-from util import aiosession
-from initialize import logger
+from agent.models import AgentOperationResult, AgentState
+from agent.util import aiosession
+from agent.initialize import logger
 
 
 async def listen_to_queue(agent_state: AgentState) -> None:

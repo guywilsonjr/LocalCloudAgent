@@ -1,14 +1,13 @@
 import os
 
-from common import constants
-import logging
+import pytest
+
 from common.configuration import agent_config
 
-# TODO
-def test_main():
-    import os
-    os.geteuid = lambda: 0
 
+@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
+def test_main() -> None:
     from cli import main
-    #main.install_service()
-    #assert os.path.exists('/'.join([agent_config.fs_root_path, constants.service_fn]))
+    main.install_service()
+    assert os.path.exists(agent_config.installed_service_fp)
+

@@ -3,9 +3,9 @@ from cumulonimbus_models.agent import AgentRegisterResponse
 
 from agent.models import AgentState
 from tests.common_test import test_constants
-from tests.common_test.test_fixtures import setup_file_system
 
 
+@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
 @pytest.mark.asyncio
 async def test_get_registration():
     from agent import agent_info
@@ -18,8 +18,9 @@ async def test_get_registration():
     )
 
 
+@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
 @pytest.mark.asyncio
-async def test_get_agent_state(setup_file_system):
+async def test_get_agent_state():
     from agent import agent_info
     expected_agent_state = AgentState(
         agent_id=test_constants.test_agent_id,

@@ -1,16 +1,15 @@
 from datetime import datetime
 
 import pytest
-from cumulonimbus_models.operations import OperationResult, OperationResultStatus, OperationType
+from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
 from agent.models import AgentState, AgentOperation
 from common_test import test_constants, test_mocks
-from tests.common_test.test_fixtures import setup_file_system
 
 
-
+@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
 @pytest.mark.asyncio
-async def test_complete_operation(setup_file_system, mocker):
+async def test_complete_operation(mocker):
     test_persist_op = AgentOperation(
         started=datetime.now(),
         operation=test_constants.test_op,

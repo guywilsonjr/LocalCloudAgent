@@ -10,8 +10,8 @@ from common import constants, systemd
 
 async def check_systemd_service() -> None:
     logger.info('Checking Systemd Service')
-    ref_systemd_conf = await fetch_file_data(agent_config.repo_service_fp)
-    repo_systemd_conf = await fetch_file_data(agent_config.installed_service_fn)
+    ref_systemd_conf = constants.service_file_data
+    repo_systemd_conf = await fetch_file_data(agent_config.installed_service_fp)
 
     if ref_systemd_conf != repo_systemd_conf:
         logger.info('Found updated Systemd Service File')
@@ -22,14 +22,13 @@ async def check_systemd_service() -> None:
 
 async def systemd_update() -> None:
     logger.info('Updating Systemd Service File')
-    ref_conf_path = '/'.join([agent_config.repo_dir, constants.repo_service_fp])
-    shutil.copyfile(ref_conf_path, constants.service_fn)
+    async with open(constants.installed_service_fp, 'w') as service_file:
+        await service_file.write(constants.service_file_data)
     systemd.reload_systemd()
 
 
 async def update_repository(operation: AgentOperation) -> AgentOperationResult:
     logger.info('Updating Repository')
-    #TODO ACTUALLY READ FROM THIS FILE and finish sytemd stuff
     await write_data_to_file(agent_config.update_operation_fp, operation.model_dump_json())
 
     repo = Repo(agent_config.repo_dir)

@@ -2,16 +2,16 @@ from datetime import datetime
 
 import pytest
 from types_aiobotocore_sqs.type_defs import MessageTypeDef
-from cumulonimbus_models.operations import Operation, OperationResultStatus, OperationType
+from cumulonimbus_models.operations import OperationResultStatus
 
 from agent.models import AgentOperation
 from common.configuration import agent_config
 from tests.common_test import test_constants
-from tests.common_test.test_fixtures import setup_file_system
 
 
+@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
 @pytest.mark.asyncio
-async def test_init_operation(setup_file_system):
+async def test_init_operation():
     start_dt = datetime.now()
 
     test_persist_op = AgentOperation(

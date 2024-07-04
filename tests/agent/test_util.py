@@ -3,11 +3,11 @@ import string
 import random
 
 import pytest
-from tests.common_test.test_fixtures import setup_file_system
 
 
+@pytest.mark.usefixtures("root_fakefs")
 @pytest.mark.asyncio
-async def test_util(setup_file_system):
+async def test_util():
     test_fp = f'test.txt'
     from agent import util
     first_char = random.choice(string.ascii_letters)

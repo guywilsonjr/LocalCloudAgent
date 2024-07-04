@@ -12,7 +12,7 @@ class AgentConfig(BaseModel):
 
     @property
     def home_dir(self) -> str:
-        return f'{constants.root_dir}'
+        return constants.root_dir
 
     @property
     def log_dir(self) -> str:
@@ -60,11 +60,11 @@ class AgentConfig(BaseModel):
 
     @property
     def repo_service_fp(self) -> str:
-        return f'{"/".join([self.repo_dir, constants.repo_service_fp])}'
+        return f'{"/".join([self.repo_dir, constants.relative_repo_service_fp])}'
 
     @property
-    def installed_service_fn(self) -> str:
-        return f'{constants.service_fn}'
+    def installed_service_fp(self) -> str:
+        return f'{constants.installed_service_conf_fp}'
 
 
 agent_config = AgentConfig()
