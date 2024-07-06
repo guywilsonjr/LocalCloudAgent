@@ -1,6 +1,8 @@
 import json
+import logging
 import os
 import shutil
+import subprocess
 from typing import Generator
 
 import pyfakefs.fake_filesystem
@@ -26,6 +28,7 @@ class BaseMock:
 async def mock_async_open(fp: str, mode: str) -> Generator[BaseMock, None, None]:
     class MockFileObj(BaseMock):
         def __init__(self):
+            logging.info('Opening file %s', fp)
             self.fh = open(fp, mode)
 
         async def write(self, data: str) -> None:
@@ -43,12 +46,33 @@ async def mock_async_open(fp: str, mode: str) -> Generator[BaseMock, None, None]
             f.fh.close()
 
 
+def mock_venv_create(*args, **kwargs):
+    logging.info('Making mock venv')
+    os.makedirs(constants.venv_dir)
+
+
 # Maybe use mocker for the git stuff
 from tests.common_test import test_mocks
 import git
+import venv
+
+venv.create = mock_venv_create
 git.Git = test_mocks.MockGit
 git.Repo = test_mocks.MockGitRepo
 git.TagReference = test_mocks.MockTagRef
+
+
+class SubprocessRunResult:
+    stdout: str = ''
+
+
+
+def mock_subprocess_run(*args, **kwargs):
+    logging.info('Mock Subprocess Running')
+    return SubprocessRunResult()
+
+
+subprocess.run = mock_subprocess_run
 
 
 @pytest.fixture(autouse=True)
@@ -77,8 +101,15 @@ def fake_base_fs():
         constants.installed_service_conf_dir
     ]
     [os.makedirs(base_dir) for base_dir in base_dirs]
+    os.makedirs('/usr/bin')
+    with open('/usr/bin/python3.12', 'w') as file:
+        file.write('')
     yield
-    [shutil.rmtree(base_dir) for base_dir in reversed(base_dirs)]
+    shutil.rmtree('/usr')
+    shutil.rmtree('/etc')
+    shutil.rmtree('/var')
+    shutil.rmtree('/root')
+
 
 
 @pytest.fixture

@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Optional
 
@@ -19,6 +20,8 @@ async def fetch_file_data(fp: str) -> Optional[str]:
 
 
 async def write_data_to_file(fp: str, data: str) -> None:
+    logging.info(f'Writing data to file: {fp}')
+    logging.info(f'In dir: {os.getcwd()}')
     async with async_open(fp, 'w') as f:
         await f.write(data)
 

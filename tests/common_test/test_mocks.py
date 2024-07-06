@@ -1,3 +1,7 @@
+import logging
+import os
+
+from common import constants
 from tests.common_test import test_constants
 
 
@@ -22,7 +26,13 @@ class MockGit:
 class MockGitRepo:
     tags = [MockTagRef()]
     def __init__(self, *args, **kwargs):
+        logging.info('creating repo')
         pass
+
+    @staticmethod
+    def clone_from(*args, **kwargs):
+        logging.info('Cloning from')
+        os.makedirs(constants.repo_python_path)
 
 
 class MockAIOHttpResponse:
