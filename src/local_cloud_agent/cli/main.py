@@ -3,12 +3,10 @@ import os
 import shutil
 import subprocess
 import venv
-import git
 import click
-from git import Repo
 
 from common.configuration import agent_config
-from common import constants, systemd
+from common import constants, git_common, systemd
 
 
 
@@ -33,8 +31,8 @@ def install():
         logging.info('Removing existing installation')
         shutil.rmtree(constants.installed_repo_dir)
     os.makedirs(constants.repo_install_parent_dir)
-    os.chdir(constants.repo_install_parent_dir)
-    Repo.clone_from(constants.repo_url, 'LocalCloudAgent', multi_options=['--depth', '1'])
+    logging.info(f'Cloning repository into directory: {constants.installed_repo_dir}')
+    git_common.clone_repo(constants.repo_url, constants.installed_repo_dir)
     logging.info('Repository Installed')
     logging.info('Creating metadata, configuration, and log directories')
     os.makedirs(constants.metadata_dir, exist_ok=True)

@@ -6,6 +6,7 @@ click
 cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1
 GitPython
 pydantic
+pygit2
 pystemd
 pysystemd
 tenacity

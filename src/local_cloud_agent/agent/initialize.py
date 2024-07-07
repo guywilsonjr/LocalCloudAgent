@@ -1,5 +1,3 @@
-import os
-
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
 from common.configuration import agent_config
@@ -7,7 +5,7 @@ from agent.models import AgentOperation
 from agent.operations.post_ops import complete_operation
 from agent.post_config import logger
 from agent.util import fetch_file_data
-from agent.versioning import get_latest_tag
+from common.git_common import get_latest_tag
 
 
 async def check_for_updates() -> None:

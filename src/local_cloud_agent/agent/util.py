@@ -1,5 +1,4 @@
 import logging
-import os
 from typing import Optional
 
 import aioboto3
@@ -12,6 +11,7 @@ BASE_API_URL = 'https://api.local.guywilsonjr.com'
 
 
 async def fetch_file_data(fp: str) -> Optional[str]:
+    import os
     if os.path.exists(fp):
         async with async_open(fp, 'r') as f:
             return await f.read()
@@ -20,13 +20,12 @@ async def fetch_file_data(fp: str) -> Optional[str]:
 
 
 async def write_data_to_file(fp: str, data: str) -> None:
-    logging.info(f'Writing data to file: {fp}')
-    logging.info(f'In dir: {os.getcwd()}')
     async with async_open(fp, 'w') as f:
         await f.write(data)
 
 
 async def append_data_to_file(fp: str, data: str) -> None:
+    import os
     if os.path.exists(fp):
         async with async_open(fp, 'a') as f:
             await f.write(data)

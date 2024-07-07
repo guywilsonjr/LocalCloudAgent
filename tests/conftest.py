@@ -1,11 +1,9 @@
 import json
 import logging
-import os
 import shutil
 import subprocess
 from typing import Generator
 
-import pyfakefs.fake_filesystem
 import pytest
 import aiofile
 
@@ -47,6 +45,7 @@ async def mock_async_open(fp: str, mode: str) -> Generator[BaseMock, None, None]
 
 
 def mock_venv_create(*args, **kwargs):
+    import os
     logging.info('Making mock venv')
     os.makedirs(constants.venv_dir)
 
@@ -55,6 +54,7 @@ def mock_venv_create(*args, **kwargs):
 from tests.common_test import test_mocks
 import git
 import venv
+
 
 venv.create = mock_venv_create
 git.Git = test_mocks.MockGit
@@ -74,26 +74,26 @@ def mock_subprocess_run(*args, **kwargs):
 
 subprocess.run = mock_subprocess_run
 
-
-@pytest.fixture(autouse=True)
-def fake_filesystem(fs_session: pyfakefs.fake_filesystem.FakeFilesystem):  # pylint:disable=invalid-name
-    """Variable name 'fs' causes a pylint warning. Provide a longer name
-    acceptable to pylint for use in tests.
-    """
-    aiofile.async_open = mock_async_open
-    yield fs_session
+aiofile.async_open = mock_async_open
 
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def root_fakefs():
+    def fake_clone_repo(*args, **kwargs):
+        pass
+    import pygit2
+    pygit2.clone_repository = fake_clone_repo
     with Patcher(allow_root_user=True) as patcher:
         yield patcher.fs
 
 
-@pytest.fixture
+
+@pytest.fixture(scope='function')
 def fake_base_fs():
+    import os
     assert not os.path.exists(constants.parent_conf_dir)
     base_dirs = [
+        '/usr/lib/ssl/certs',
         constants.parent_conf_dir,
         constants.parent_log_dir,
         constants.parent_metadata_dir,
@@ -101,29 +101,31 @@ def fake_base_fs():
         constants.system_usr_local_dir,
         constants.installed_service_conf_dir
     ]
-    logging.info(os.listdir('/tmp'))
     [os.makedirs(base_dir) for base_dir in base_dirs]
     os.makedirs('/usr/bin')
     with open('/usr/bin/python3.12', 'w') as file:
         file.write('')
     yield
-    shutil.rmtree('/usr')
+    shutil.rmtree('/usr/local')
     shutil.rmtree('/etc')
     shutil.rmtree('/var')
     shutil.rmtree('/root')
+    shutil.rmtree('/usr/lib/ssl/certs')
 
 
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def aws():
+    import os
     os.makedirs(agent_config.aws_dir)
     with open(agent_config.aws_creds_fp, 'w') as f:
         f.write('')
     yield
 
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def installed(aws: None):
+    import os
     os.makedirs(agent_config.agent_dir)
     os.makedirs(agent_config.operations_dir)
     os.makedirs(constants.install_log_dir)
@@ -140,8 +142,9 @@ def installed(aws: None):
     shutil.rmtree(common.constants.aws_dir)
 
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def registered_agent():
+    import os
     with open(agent_config.agent_registration_fp, 'w') as f:
         f.write(
             json.dumps(
@@ -156,6 +159,6 @@ def registered_agent():
         )
         f.write('\n')
 
-    print(f'Registered agent {agent_config.agent_registration_fp}')
+    logging.info(f'Registered agent {agent_config.agent_registration_fp}')
     yield
     os.remove(agent_config.agent_registration_fp)

@@ -1,15 +1,23 @@
+import logging
 from typing import Tuple
 
 from git import Git, Repo, TagReference
+import pygit2
+
 
 from agent.models import VersionInfo
-from agent.post_config import logger
 from common import constants
 from common.configuration import agent_config
 
 
+def clone_repo(repo_url: str, repo_path: str) -> None:
+    repo = pygit2.clone_repository(repo_url, repo_path, depth=1)
+    logging.info(f'Cloned repository to {agent_config.repo_dir}')
+    return repo
+
+
 def get_latest_tag() -> TagReference:
-    logger.info(f'Getting latest tag from repo: {agent_config.repo_dir}')
+    logging.info(f'Getting latest tag from repo: {agent_config.repo_dir}')
     repo = Repo(agent_config.repo_dir)
     tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
     latest_tag = tags[-1]

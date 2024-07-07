@@ -9,7 +9,7 @@ from common.configuration import agent_config
 from agent.models import AgentState
 from agent.post_config import logger
 from agent.util import BASE_API_URL, fetch_file_data, write_data_to_file
-from agent.versioning import get_latest_tag
+from common.git_common import get_latest_tag
 
 
 

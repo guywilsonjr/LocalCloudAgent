@@ -4,6 +4,7 @@
 #
 #    pip-compile
 #
+
 aioboto3==13.1.0
     # via -r requirements.in
 aiobotocore[boto3]==2.13.1
@@ -41,6 +42,8 @@ botocore-stubs==1.34.140
     #   types-aiobotocore
 caio==0.9.17
     # via aiofile
+cffi==1.16.0
+    # via pygit2
 click==8.1.7
     # via -r requirements.in
 cumulonimbus-models @ git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1
@@ -68,6 +71,8 @@ multidict==6.0.5
     #   yarl
 psutil==6.0.0
     # via pystemd
+pycparser==2.22
+    # via cffi
 pydantic==2.7.2
     # via
     #   -r requirements.in
@@ -76,6 +81,8 @@ pydantic-core==2.18.3
     # via
     #   cumulonimbus-models
     #   pydantic
+pygit2==1.15.1
+    # via -r requirements.in
 pystemd==0.13.2
     # via -r requirements.in
 pysystemd==1.1
