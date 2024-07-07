@@ -92,6 +92,7 @@ def root_fakefs():
 
 @pytest.fixture
 def fake_base_fs():
+    assert not os.path.exists(constants.parent_conf_dir)
     base_dirs = [
         constants.parent_conf_dir,
         constants.parent_log_dir,
@@ -100,6 +101,7 @@ def fake_base_fs():
         constants.system_usr_local_dir,
         constants.installed_service_conf_dir
     ]
+    logging.info(os.listdir('/tmp'))
     [os.makedirs(base_dir) for base_dir in base_dirs]
     os.makedirs('/usr/bin')
     with open('/usr/bin/python3.12', 'w') as file:

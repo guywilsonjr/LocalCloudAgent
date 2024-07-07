@@ -1,9 +1,7 @@
 # Must use minimal imports to avoid circular imports
 
 import os
-from typing import ClassVar
 
-import yaml
 from pydantic import BaseModel
 from common import constants
 

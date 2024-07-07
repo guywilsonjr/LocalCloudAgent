@@ -8,6 +8,5 @@ GitPython
 pydantic
 pystemd
 pysystemd
-PyYAML
 tenacity
 types-aioboto3[sqs]
