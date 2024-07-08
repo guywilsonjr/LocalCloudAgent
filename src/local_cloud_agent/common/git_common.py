@@ -9,7 +9,7 @@ from agent.models import VersionInfo
 from common import constants
 from common.configuration import agent_config
 
-
+# TODO: remove gitpython dependency
 def clone_repo(repo_url: str, repo_path: str) -> None:
     repo = pygit2.clone_repository(repo_url, repo_path, depth=1)
     logging.info(f'Cloned repository to {agent_config.repo_dir}')

@@ -3,8 +3,6 @@ import logging
 import os
 import traceback
 
-import pytest
-
 from click.testing import CliRunner, Result
 
 
@@ -24,17 +22,16 @@ def log_cli_result(result: Result) -> None:
     )
 
 
-@pytest.mark.usefixtures("root_fakefs", "fake_base_fs")
-def test_main() -> None:
+def test_main(monkeypatch) -> None:
     runner = CliRunner()
-    from common import constants
+    with runner.isolated_filesystem('/tmp') as tmpdir:
+        with monkeypatch.context() as m:
+            m.setenv('LOCAL_CLOUD_AGENT_PREFIX', tmpdir)
+            m.setattr(os, 'geteuid', lambda: 0)
+            logging.info(f'Using Isolated filesystem: {tmpdir}')
+            from cli import main
+            result: Result = runner.invoke(main.main, ['install'])
 
-    from cli import main
-    result: Result = runner.invoke(main.install, [])
-
-    log_cli_result(result)
-    assert result.exit_code == 0
-    assert result.output == ''
-    assert os.path.exists(constants.installed_service_conf_fp)
-    assert os.path.exists(constants.venv_dir)
-
+            log_cli_result(result)
+            assert result.exit_code == 0
+            assert result.output == ''

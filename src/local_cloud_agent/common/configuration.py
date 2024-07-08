@@ -1,44 +1,58 @@
-# Must use minimal imports to avoid circular imports
-
 import os
 
 from pydantic import BaseModel
 from common import constants
 
 
+install_prefix = os.environ.get(constants.prefix_env_var, '')
+
+
+def get_prefixed_dir(dir_name: str) -> str:
+    return f'{install_prefix.rstrip("/")}/{dir_name.lstrip("/")}'
+
+
 class AgentConfig(BaseModel):
+
+
+    @property
+    def prefix(self) -> str:
+        return install_prefix
+
+    @staticmethod
+    def get_prefixed_dir(dir_name: str) -> str:
+        return get_prefixed_dir(dir_name)
 
     @property
     def home_dir(self) -> str:
-        return constants.root_dir
+        return self.get_prefixed_dir(constants.root_home_dir)
 
     @property
     def log_dir(self) -> str:
-        return f'{constants.install_log_dir}'
+        return self.get_prefixed_dir(constants.install_log_dir)
 
     @property
     def aws_dir(self) -> str:
-        return f'{constants.aws_dir}'
+        return self.get_prefixed_dir(constants.aws_dir)
 
     @property
     def repo_dir(self) -> str:
-        return f'{constants.installed_repo_dir}'
+        return self.get_prefixed_dir(constants.installed_repo_dir)
 
     @property
     def metadata_dir(self) -> str:
-        return f'{constants.metadata_dir}'
+        return self.get_prefixed_dir(constants.metadata_dir)
 
     @property
     def agent_dir(self) -> str:
-        return f'{constants.metadata_dir}/agent'
+        return f'{self.metadata_dir}/agent'
 
     @property
     def operations_dir(self) -> str:
-        return f'{constants.metadata_dir}/operations'
+        return f'{self.metadata_dir}/operations'
 
     @property
     def aws_creds_fp(self) -> str:
-        return f'{constants.aws_dir}/credentials'
+        return f'{self.aws_dir}/credentials'
 
     @property
     def agent_registration_fp(self) -> str:
@@ -46,7 +60,7 @@ class AgentConfig(BaseModel):
 
     @property
     def agent_log_fp(self) -> str:
-        return f'{constants.install_log_dir}/local_cloud_agent.log'
+        return f'{self.log_dir}/local_cloud_agent.log'
 
     @property
     def operation_log_fp(self) -> str:
@@ -56,13 +70,14 @@ class AgentConfig(BaseModel):
     def update_operation_fp(self) -> str:
         return f'{self.operations_dir}/update.json'
 
-    @property
-    def repo_service_fp(self) -> str:
-        return f'{"/".join([self.repo_dir, constants.relative_repo_service_fp])}'
 
     @property
     def installed_service_fp(self) -> str:
-        return f'{constants.installed_service_conf_fp}'
+        return self.get_prefixed_dir(constants.installed_service_conf_fp)
+
+    @property
+    def venv_dir(self) -> str:
+        return self.get_prefixed_dir(constants.venv_dir)
 
 
 agent_config = AgentConfig()

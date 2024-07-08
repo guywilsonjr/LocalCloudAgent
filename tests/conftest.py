@@ -10,8 +10,6 @@ import aiofile
 from contextlib import asynccontextmanager
 
 from pyfakefs.fake_filesystem_unittest import Patcher
-import common.configuration
-from common.configuration import agent_config
 
 from common import constants
 from tests.common_test import test_constants
@@ -46,8 +44,9 @@ async def mock_async_open(fp: str, mode: str) -> Generator[BaseMock, None, None]
 
 def mock_venv_create(*args, **kwargs):
     import os
+    from common.configuration import agent_config
     logging.info('Making mock venv')
-    os.makedirs(constants.venv_dir)
+    os.makedirs(agent_config.venv_dir)
 
 
 # Maybe use mocker for the git stuff
@@ -97,7 +96,7 @@ def fake_base_fs():
         constants.parent_conf_dir,
         constants.parent_log_dir,
         constants.parent_metadata_dir,
-        constants.root_dir,
+        constants.root_home_dir,
         constants.system_usr_local_dir,
         constants.installed_service_conf_dir
     ]
@@ -117,6 +116,7 @@ def fake_base_fs():
 @pytest.fixture(scope='function')
 def aws():
     import os
+    from common.configuration import agent_config
     os.makedirs(agent_config.aws_dir)
     with open(agent_config.aws_creds_fp, 'w') as f:
         f.write('')
@@ -126,6 +126,7 @@ def aws():
 @pytest.fixture(scope='function')
 def installed(aws: None):
     import os
+    from common.configuration import agent_config
     os.makedirs(agent_config.agent_dir)
     os.makedirs(agent_config.operations_dir)
     os.makedirs(constants.install_log_dir)
@@ -139,12 +140,14 @@ def installed(aws: None):
     shutil.rmtree(constants.install_log_dir)
     shutil.rmtree(agent_config.metadata_dir)
     os.remove(constants.installed_service_conf_fp)
+    import common.configuration
     shutil.rmtree(common.constants.aws_dir)
 
 
 @pytest.fixture(scope='function')
 def registered_agent():
     import os
+    from common.configuration import agent_config
     with open(agent_config.agent_registration_fp, 'w') as f:
         f.write(
             json.dumps(
