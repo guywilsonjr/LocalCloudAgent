@@ -23,7 +23,7 @@ async def check_for_updates() -> None:
 
 
 async def startup():
-    version = get_latest_tag().name
+    version = get_latest_tag()
     logger.info(f'Starting Local Cloud Agent version: {version}')
     await check_for_updates()
 

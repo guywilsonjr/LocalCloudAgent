@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import shutil
 import subprocess
 from typing import Generator
@@ -11,7 +12,6 @@ from contextlib import asynccontextmanager
 
 from pyfakefs.fake_filesystem_unittest import Patcher
 
-from common import constants
 from tests.common_test import test_constants
 
 
@@ -78,18 +78,37 @@ aiofile.async_open = mock_async_open
 
 @pytest.fixture(scope='function')
 def root_fakefs():
-    def fake_clone_repo(*args, **kwargs):
-        pass
-    import pygit2
-    pygit2.clone_repository = fake_clone_repo
+    logging.info('root_fakefs')
     with Patcher(allow_root_user=True) as patcher:
         yield patcher.fs
 
 
+@pytest.fixture(scope='function')
+def usr_local_src(monkeypatch, tmp_path):
+    logging.info('usr_local_src')
+    with monkeypatch.context() as m:
+        from common import constants
+        m.setenv(constants.repo_prefix_env_var, str(tmp_path))
+        os.makedirs(f'{tmp_path}/usr/local/src')
+        yield
+
+
+@pytest.fixture(scope='function')
+def installed_repo_dir(monkeypatch, tmp_path):
+    logging.info('installed_repo_dir')
+    with monkeypatch.context() as m:
+        m.setenv('LOCAL_CLOUD_AGENT_REPO_PREFIX', str(tmp_path))
+        from common import git_common
+        git_common.clone_repo(None)
+        logging.info(git_common.get_latest_tag())
+        yield
+
 
 @pytest.fixture(scope='function')
 def fake_base_fs():
+    logging.info('fake_base_fs')
     import os
+    from common import constants
     assert not os.path.exists(constants.parent_conf_dir)
     base_dirs = [
         '/usr/lib/ssl/certs',
@@ -115,6 +134,7 @@ def fake_base_fs():
 
 @pytest.fixture(scope='function')
 def aws():
+    logging.info('aws')
     import os
     from common.configuration import agent_config
     os.makedirs(agent_config.aws_dir)
@@ -125,7 +145,9 @@ def aws():
 
 @pytest.fixture(scope='function')
 def installed(aws: None):
+    logging.info('installed')
     import os
+    from common import constants
     from common.configuration import agent_config
     os.makedirs(agent_config.agent_dir)
     os.makedirs(agent_config.operations_dir)

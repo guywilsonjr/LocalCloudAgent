@@ -21,6 +21,7 @@ aws_creds_fp = f'{aws_dir}/credentials'
 agent_dir = f'{metadata_dir}/agent'
 repo_python_path = f'{installed_repo_dir}/src/{lower_keyword}'
 prefix_env_var = 'LOCAL_CLOUD_AGENT_PREFIX'
+repo_prefix_env_var = 'LOCAL_CLOUD_AGENT_REPO_PREFIX'
 # TODO REMOVE FILE AND FILE USAGES AND REPLACE WITH CREATED FILE BELOW
 service_file_data = f'''[Unit]
 Description=Local Cloud Agent

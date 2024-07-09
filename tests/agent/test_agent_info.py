@@ -21,10 +21,9 @@ async def test_get_registration():
 
 
 
-@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
+@pytest.mark.usefixtures("installed_repo_dir", "root_fakefs", "fake_base_fs", "installed", "registered_agent")
 @pytest.mark.asyncio
 async def test_get_agent_state():
-    import os
     from agent import agent_info
     expected_agent_state = AgentState(
         agent_id=test_constants.test_agent_id,

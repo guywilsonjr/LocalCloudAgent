@@ -51,5 +51,5 @@ async def get_agent_state() -> AgentState:
     return AgentState(
         agent_id=agent_registration.agent_id,
         queue_url=agent_registration.operations_queue_url,
-        version=get_latest_tag().name
+        version=get_latest_tag()
     )

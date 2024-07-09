@@ -4,23 +4,21 @@ from pydantic import BaseModel
 from common import constants
 
 
-install_prefix = os.environ.get(constants.prefix_env_var, '')
 
-
-def get_prefixed_dir(dir_name: str) -> str:
-    return f'{install_prefix.rstrip("/")}/{dir_name.lstrip("/")}'
 
 
 class AgentConfig(BaseModel):
 
-
     @property
     def prefix(self) -> str:
-        return install_prefix
+        return os.environ.get(constants.prefix_env_var, '')
 
-    @staticmethod
-    def get_prefixed_dir(dir_name: str) -> str:
-        return get_prefixed_dir(dir_name)
+    @property
+    def repo_prefix(self) -> str:
+        return os.environ.get(constants.repo_prefix_env_var, '')
+
+    def get_prefixed_dir(self, dir_name: str) -> str:
+        return f'{self.prefix.rstrip("/")}/{dir_name.lstrip("/")}'
 
     @property
     def home_dir(self) -> str:
@@ -35,12 +33,20 @@ class AgentConfig(BaseModel):
         return self.get_prefixed_dir(constants.aws_dir)
 
     @property
+    def repo_parent_dir(self) -> str:
+        return f'{self.repo_prefix.rstrip("/")}/{self.get_prefixed_dir(constants.repo_install_parent_dir).lstrip("/")}'
+
+    @property
     def repo_dir(self) -> str:
-        return self.get_prefixed_dir(constants.installed_repo_dir)
+        return f'{self.repo_prefix.rstrip("/")}/{self.get_prefixed_dir(constants.installed_repo_dir).lstrip("/")}'
 
     @property
     def metadata_dir(self) -> str:
         return self.get_prefixed_dir(constants.metadata_dir)
+
+    @property
+    def conf_dir(self) -> str:
+        return self.get_prefixed_dir(constants.install_agent_conf_dir)
 
     @property
     def agent_dir(self) -> str:
@@ -78,6 +84,10 @@ class AgentConfig(BaseModel):
     @property
     def venv_dir(self) -> str:
         return self.get_prefixed_dir(constants.venv_dir)
+
+    @property
+    def venv_parent_dir(self) -> str:
+        return self.get_prefixed_dir(constants.venv_parent_dir)
 
 
 agent_config = AgentConfig()

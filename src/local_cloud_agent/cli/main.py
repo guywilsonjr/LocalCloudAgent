@@ -13,7 +13,7 @@ from common import constants, git_common, systemd
 
 
 def install_service():
-    fp = configuration.get_prefixed_dir(constants.installed_service_conf_fp)
+    fp = agent_config.installed_service_fp
     with open(fp, 'w') as f:
         f.write(constants.service_file_data)
     logging.info('Service Installed Successfully')
@@ -29,32 +29,31 @@ def main():
 def install():
     starting_dir = os.getcwd()
     logging.info(f'Installing repository')
-    if os.path.exists(configuration.get_prefixed_dir(constants.installed_repo_dir)):
+    if os.path.exists(agent_config.repo_dir):
         logging.info('Removing existing installation')
-        shutil.rmtree(configuration.get_prefixed_dir(constants.installed_repo_dir))
-    os.makedirs(configuration.get_prefixed_dir(constants.repo_install_parent_dir))
-    logging.info(f'Cloning repository into directory: {configuration.get_prefixed_dir(constants.installed_repo_dir)}')
-    git_common.clone_repo(constants.repo_url, configuration.get_prefixed_dir(constants.installed_repo_dir))
+        shutil.rmtree(agent_config.repo_dir)
+    os.makedirs(agent_config.repo_parent_dir, exist_ok=True)
+    git_common.clone_repo()
     logging.info('Repository Installed')
     logging.info('Creating metadata, configuration, and log directories')
-    os.makedirs(configuration.get_prefixed_dir(constants.metadata_dir), exist_ok=True)
-    os.makedirs(configuration.get_prefixed_dir(constants.install_agent_conf_dir), exist_ok=True)
-    os.makedirs(configuration.get_prefixed_dir(constants.install_log_dir), exist_ok=True)
+    os.makedirs(agent_config.metadata_dir, exist_ok=True)
+    os.makedirs(agent_config.conf_dir, exist_ok=True)
+    os.makedirs(agent_config.log_dir, exist_ok=True)
     logging.info('Metadata, configuration, and log directories created')
     logging.info('Installing services')
     install_service()
     logging.info('Service Installed')
     logging.info('Creating Virtual environment')
     venv.create(
-        env_dir=configuration.get_prefixed_dir(constants.venv_dir),
+        env_dir=agent_config.venv_dir,
         system_site_packages=False,
         with_pip=True,
         upgrade_deps=True
     )
     logging.info('Virtual Environment Created')
-    os.chdir(configuration.get_prefixed_dir(constants.venv_parent_dir))
+    os.chdir(agent_config.venv_parent_dir)
     logging.info('Installing pip dependencies')
-    subprocess.run([f'{configuration.get_prefixed_dir(constants.venv_dir)}/bin/pip', 'install', '-r', f'{agent_config.repo_dir}/requirements.txt'])
+    subprocess.run([f'{agent_config.venv_dir}/bin/pip', 'install', '-r', f'{agent_config.repo_dir}/requirements.txt'])
     logging.info('Pip dependencies installed')
     logging.info('Reloading Systemd')
     systemd.reload_systemd()
