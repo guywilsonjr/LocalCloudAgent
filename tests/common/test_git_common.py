@@ -7,8 +7,8 @@ from tests.common_test import test_constants
 @pytest.mark.usefixtures("usr_local_src")
 def test_git_common():
     from common import git_common
-    git_common.clone_repo(None)
-    tag = git_common.get_latest_tag()
+    git_common.clone_repo()
+    tag = git_common.get_version()
     assert tag == test_constants.test_version
 
     major, minor, patch = git_common.get_base_tag_version(tag)

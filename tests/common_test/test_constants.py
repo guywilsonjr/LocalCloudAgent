@@ -1,6 +1,8 @@
-from cumulonimbus_models.operations import Operation, OperationType
+from datetime import datetime
 
-from agent.models import VersionInfo
+from cumulonimbus_models.operations import Operation, OperationResultStatus, OperationType
+
+from agent.models import AgentOperation, VersionInfo
 
 
 test_agent_id = 'test-agent-id'
@@ -22,4 +24,11 @@ test_op = Operation(
     id='test-operation-id',
     type=OperationType.UPDATE,
     parameters={},
+)
+
+test_op_started = datetime.now()
+test_agent_op = AgentOperation(
+    started=test_op_started,
+    operation=test_op,
+    status=OperationResultStatus.PENDING
 )

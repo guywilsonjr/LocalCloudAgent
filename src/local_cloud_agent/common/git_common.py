@@ -10,22 +10,19 @@ from common import constants
 from common.configuration import agent_config
 
 
-def clone_repo(depth: Optional[int] = 1) -> None:
-    if depth:
-        logging.info(f'Cloning repository to {agent_config.repo_dir} with depth {depth}')
-        repo = pygit2.clone_repository(constants.repo_url, agent_config.repo_dir, depth=depth)
-    else:
-        logging.info(f'Cloning repository to {agent_config.repo_dir}')
-        repo = pygit2.clone_repository(constants.repo_url, agent_config.repo_dir)
+def clone_repo() -> None:
+    logging.info(f'Cloning repository to {agent_config.repo_dir}')
+    repo = pygit2.clone_repository(constants.repo_url, agent_config.repo_dir)
     logging.info(f'Cloned repository to {agent_config.repo_dir}')
+    latest_version = get_latest_available_version()
+    repo.checkout(f'refs/tags/{latest_version}')
     return repo
 
 
-def get_latest_tag() -> str:
+def get_version() -> str:
     logging.info(f'Getting latest tag from repo: {agent_config.repo_dir}')
     repo = pygit2.Repository(agent_config.repo_dir)
     regex = re.compile('^refs/tags/')
-    logging.info([r for r in repo.references if regex.match(r)])
     return [r for r in repo.references if regex.match(r)][-1].split('/')[-1]
 
 

@@ -50,15 +50,10 @@ def mock_venv_create(*args, **kwargs):
 
 
 # Maybe use mocker for the git stuff
-from tests.common_test import test_mocks
-import git
 import venv
 
 
 venv.create = mock_venv_create
-git.Git = test_mocks.MockGit
-git.Repo = test_mocks.MockGitRepo
-git.TagReference = test_mocks.MockTagRef
 
 
 class SubprocessRunResult:
@@ -99,8 +94,7 @@ def installed_repo_dir(monkeypatch, tmp_path):
     with monkeypatch.context() as m:
         m.setenv('LOCAL_CLOUD_AGENT_REPO_PREFIX', str(tmp_path))
         from common import git_common
-        git_common.clone_repo(None)
-        logging.info(git_common.get_latest_tag())
+        git_common.clone_repo()
         yield
 
 
@@ -110,6 +104,7 @@ def fake_base_fs():
     import os
     from common import constants
     assert not os.path.exists(constants.parent_conf_dir)
+
     base_dirs = [
         '/usr/lib/ssl/certs',
         constants.parent_conf_dir,
