@@ -1,2 +1,4 @@
 libgit2
 libsystemd
+pkg-config
+python-apt-dev

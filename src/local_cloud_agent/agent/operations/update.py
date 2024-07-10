@@ -1,7 +1,8 @@
+import aiofile
 import pygit2
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 from common.configuration import agent_config
-from agent.initialize import logger
+from agent.post_config import logger
 from agent.models import AgentOperation, AgentOperationResult
 from agent.util import write_data_to_file, fetch_file_data
 from common import constants, git_common, systemd
@@ -21,8 +22,12 @@ async def check_systemd_service() -> None:
 
 async def systemd_update() -> None:
     logger.info('Updating Systemd Service File')
-    async with open(agent_config.installed_service_fp, 'w') as service_file:
+    async with aiofile.async_open(agent_config.installed_service_fp, 'w') as service_file:
         await service_file.write(constants.service_file_data)
+    systemd.reload_systemd()
+
+
+async def reload() -> None:
     systemd.reload_systemd()
 
 
@@ -40,6 +45,6 @@ async def update_repository(operation: AgentOperation) -> AgentOperationResult:
         operation_result=OperationResult(
             operation_output='SUCCESS',
             operation_status=OperationResultStatus.SUCCESS
-        )
+        ), post_op=reload()
     )
 

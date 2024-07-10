@@ -20,6 +20,7 @@ class BaseMock:
         pass
 
 
+
 @asynccontextmanager
 async def mock_async_open(fp: str, mode: str) -> Generator[BaseMock, None, None]:
     class MockFileObj(BaseMock):
@@ -157,8 +158,7 @@ def installed(aws: None):
     shutil.rmtree(constants.install_log_dir)
     shutil.rmtree(agent_config.metadata_dir)
     os.remove(constants.installed_service_conf_fp)
-    import common.configuration
-    shutil.rmtree(common.constants.aws_dir)
+    shutil.rmtree(constants.aws_dir)
 
 
 @pytest.fixture(scope='function')

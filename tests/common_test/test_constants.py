@@ -2,7 +2,7 @@ from datetime import datetime
 
 from cumulonimbus_models.operations import Operation, OperationResultStatus, OperationType
 
-from agent.models import AgentOperation, VersionInfo
+from agent.models import AgentOperation, AgentState, VersionInfo
 
 
 test_agent_id = 'test-agent-id'
@@ -31,4 +31,10 @@ test_agent_op = AgentOperation(
     started=test_op_started,
     operation=test_op,
     status=OperationResultStatus.PENDING
+)
+
+test_agent_state = AgentState(
+    agent_id=test_agent_id,
+    queue_url=test_operations_queue_url,
+    version=test_version
 )

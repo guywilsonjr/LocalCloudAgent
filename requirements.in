@@ -7,6 +7,6 @@ cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0
 pydantic
 pygit2
 pystemd
-pysystemd
 tenacity
 types-aioboto3[sqs]
+types-pygit2

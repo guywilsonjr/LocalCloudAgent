@@ -9,7 +9,7 @@ from agent.operations.ops import operations_map
 from agent.agent_info import get_agent_state
 from agent.models import AgentOperationResult, AgentState
 from agent.util import aiosession
-from agent.initialize import logger
+from agent.post_config import logger
 
 
 async def listen_to_queue(agent_state: AgentState) -> None:
@@ -33,6 +33,7 @@ async def listen_to_queue(agent_state: AgentState) -> None:
                     ReceiptHandle=message['ReceiptHandle']
                 )
                 operation_func = operations_map[operation.operation.type]
+                result = None
                 try:
                     result = await operation_func(operation)
                 except Exception as e:
@@ -45,18 +46,19 @@ async def listen_to_queue(agent_state: AgentState) -> None:
                     operation.status = OperationResultStatus.FAILURE
                     logger.exception(e)
                 finally:
-                    if result.post_op:
-                        logger.info(f'Running post operation for operation: {operation}')
-                        await result.post_op
-                    await complete_operation(agent_state, operation, result)
+                    # TODO add post operation handling on case of failure I thinkk or undo if checking
+                    if result:
+                        if result.post_op:
+                            logger.info(f'Running post operation for operation: {operation}')
+                            await result.post_op
+                        await complete_operation(agent_state, operation, result.operation_result)
             else:
                 await asyncio.sleep(60)
 
 
 async def async_main() -> None:
-    initialize.validate_fs()
-    await initialize.startup()
     agent_state = await get_agent_state()
+    await initialize.startup(agent_state)
     await listen_to_queue(agent_state)
 
 

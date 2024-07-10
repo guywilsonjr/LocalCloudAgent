@@ -1,12 +1,13 @@
 import json
 import logging
-import os
 import sys
+from typing import Any, Dict
+
 from aws_lambda_powertools import Logger
 from common.configuration import agent_config
 
 
-def serialize_log(json_data: dict) -> str:
+def serialize_log(json_data: Dict[str, Any]) -> str:
     return json.dumps(json_data, indent=2)
 
 

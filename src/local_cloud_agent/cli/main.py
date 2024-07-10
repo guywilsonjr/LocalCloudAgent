@@ -6,13 +6,12 @@ import venv
 import click
 
 from common.configuration import agent_config
-from common import configuration
 from common import constants, git_common, systemd
 
 
 
 
-def install_service():
+def install_service() -> None:
     fp = agent_config.installed_service_fp
     with open(fp, 'w') as f:
         f.write(constants.service_file_data)
@@ -20,13 +19,13 @@ def install_service():
 
 
 @click.group()
-def main():
+def main() -> None:
     if os.geteuid() != 0:
         raise RuntimeError('Must be run as root')
 
 
 @main.command()
-def install():
+def install() -> None:
     starting_dir = os.getcwd()
     logging.info(f'Installing repository')
     if os.path.exists(agent_config.repo_dir):
@@ -63,9 +62,8 @@ def install():
 
 @main.command()
 @click.option('--purge', is_flag=True)
-def uninstall():
-    os.chdir(configuration.get_prefixed_dir(constants.repo_install_parent_dir))
-    shutil.rmtree(configuration.get_prefixed_dir(f'{constants.repo_install_parent_dir}/LocalCloudAgent'))
+def uninstall() -> None:
+    pass
     '''''
     # If --purge
     os.remove(constants.metadata_dir)

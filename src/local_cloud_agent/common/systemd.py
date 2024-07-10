@@ -1,12 +1,12 @@
-from pysystemd import ServiceManager
-from common import constants
-from pystemd.systemd1 import Unit
+from common.configuration import agent_config
+from pystemd.systemd1 import Manager, Unit
 
 
-def reload_systemd():
-    #unit = Unit(bytes(constants.service_fn))
-    service_manager = ServiceManager(constants.lower_keyword)
-    service_manager.reload()
-    service_manager.restart()
+def reload_systemd() -> None:
+    unit: Manager = Unit(agent_config.installed_service_fp.encode())
+    unit.load()
+    unit.Unit.Restart(b'fail')
+
+
 
 

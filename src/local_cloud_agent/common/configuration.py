@@ -5,8 +5,6 @@ from common import constants
 
 
 
-
-
 class AgentConfig(BaseModel):
 
     @property
@@ -93,13 +91,13 @@ class AgentConfig(BaseModel):
 agent_config = AgentConfig()
 
 
-def ensure_dirs_exist():
+def ensure_dirs_exist() -> None:
     os.makedirs(agent_config.metadata_dir, exist_ok=True)
     os.makedirs(agent_config.agent_dir, exist_ok=True)
     os.makedirs(agent_config.operations_dir, exist_ok=True)
 
 
-def validate_fs():
+def validate_fs() -> None:
     ensure_dirs_exist()
     if not os.path.exists(agent_config.repo_dir):
         raise RuntimeError(f'Repo dir not found: {agent_config.repo_dir}')

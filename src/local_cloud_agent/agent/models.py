@@ -1,7 +1,7 @@
 # Models should have minimal imports
 
 from datetime import datetime
-from typing import Awaitable, Optional
+from typing import Any, Awaitable, Callable, Coroutine, Optional
 
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus
 from pydantic import BaseModel, ConfigDict
@@ -11,10 +11,13 @@ class VersionInfo(BaseModel):
     major: int
     minor: int
     patch: int
-    release_candidate: int
+    release_candidate: Optional[int] = None
 
-    def __str__(self):
-        return f'v{self.major}.{self.minor}.{self.patch}-rc{self.release_candidate}'
+    def __str__(self) -> str:
+        if self.release_candidate is None:
+            return f'v{self.major}.{self.minor}.{self.patch}'
+        else:
+            return f'v{self.major}.{self.minor}.{self.patch}-rc{self.release_candidate}'
 
 
 class AgentState(BaseModel):
@@ -32,6 +35,6 @@ class AgentOperation(BaseModel):
 class AgentOperationResult(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     operation_result: OperationResult
-    post_op: Optional[Awaitable] = None
+    post_op: Optional[Coroutine[Any, Any, None]] = None
 
 

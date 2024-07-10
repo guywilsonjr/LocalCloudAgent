@@ -5,34 +5,25 @@ from common import constants
 from tests.common_test import test_constants
 
 
-class MockCommit:
-    committed_datetime = 0
+class MockSystemdUnit:
 
-
-
-class MockTagRef:
-    commit = MockCommit()
-    name = test_constants.test_version
-
-
-class MockGit:
     def __init__(self, *args, **kwargs):
         pass
 
-    def ls_remote(self, *args, **kwargs):
-        return test_constants.test_version
-
-
-class MockGitRepo:
-    tags = [MockTagRef()]
-    def __init__(self, *args, **kwargs):
-        logging.info('creating repo')
+    def load(self):
         pass
 
-    @staticmethod
-    def clone_from(*args, **kwargs):
-        logging.info('Cloning from')
-        os.makedirs(constants.repo_python_path)
+    class UnitUnit:
+
+        def __init__(self, *args, **kwargs):
+            pass
+
+        @staticmethod
+        def Restart(self, *args, **kwargs):
+            pass
+
+    Unit = UnitUnit()
+
 
 
 class MockAIOHttpResponse:

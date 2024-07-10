@@ -13,7 +13,7 @@ from common.git_common import get_version
 
 
 
-@retry(wait=wait_exponential(), before=before_log(logger, logging.INFO))
+@retry(wait=wait_exponential(), before=before_log(logger, logging.INFO)) # type: ignore
 async def register_agent_request(req: AgentRegisterRequest) -> AgentRegisterResponse:
     url = AgentRegisterRequest.get_url(BASE_API_URL)
     async with aiohttp.ClientSession() as session:

@@ -3,6 +3,7 @@ name = "local-cloud-agent"
 requires-python = ">=3.10"
 dynamic = ["dependencies", "version"]
 
+
 readme = "README.md"
 authors = [
     { name = "Guy Wilson", email = "guywilsonjr@gmail.com" },
@@ -34,8 +35,42 @@ Repository = "https://github.com/guywilsonjr/LocalCloudAgent"
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src/local_cloud_agent"]
 
 
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools_scm]
+
+[tool.mypy]
+cache_dir = '/dev/null'
+warn_unused_configs = true
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+
+# for strict mypy: (this is the tricky one :-))
+disallow_untyped_defs = true
+
+plugins = [
+    "pydantic.mypy"
+]
+[[tool.mypy.overrides]]
+module = 'pystemd.systemd1'
+ignore_missing_imports = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
 addopts = "-svvv"
@@ -50,37 +85,17 @@ testpaths = [
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py312
+envlist = py312, mypy
 
 [testenv]
 deps =
     -rrequirements-test.txt
 commands =
     python3.12 -m pytest -svvv --log-cli-level=INFO
+
+[testenv:mypy]
+deps =
+    mypy
+commands =
+    mypy src
 """
-
-
-[tool.setuptools_scm]
-[tool.setuptools.dynamic]
-dependencies = { file = ["requirements.txt"] }
-
-
-[tool.mypy]
-follow_imports = "silent"
-warn_redundant_casts = true
-warn_unused_ignores = true
-disallow_any_generics = true
-check_untyped_defs = true
-no_implicit_reexport = true
-
-# for strict mypy: (this is the tricky one :-))
-disallow_untyped_defs = true
-
-plugins = [
-    "pydantic.mypy"
-]
-
-[tool.pydantic-mypy]
-init_forbid_extra = true
-init_typed = true
-warn_required_dynamic_aliases = true
