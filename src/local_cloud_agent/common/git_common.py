@@ -20,7 +20,7 @@ def get_version() -> str:
     logging.info(f'Getting latest tag from repo: {agent_config.repo_dir}')
     repo = pygit2.Repository(agent_config.repo_dir)
     regex = re.compile('^refs/tags/')
-    return [r.name for r in repo.references if regex.match(r.name)][-1].split('/')[-1]
+    return [r for r in cast(List[str], repo.references) if regex.match(r)][-1].split('/')[-1]
 
 
 
