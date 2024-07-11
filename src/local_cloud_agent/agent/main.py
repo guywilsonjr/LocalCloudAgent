@@ -50,7 +50,7 @@ async def listen_to_queue(agent_state: AgentState) -> None:
                     if result:
                         if result.post_op:
                             logger.info(f'Running post operation for operation: {operation}')
-                            await result.post_op
+                            await result.post_op()
                         await complete_operation(agent_state, operation, result.operation_result)
             else:
                 await asyncio.sleep(60)

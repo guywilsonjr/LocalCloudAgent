@@ -45,6 +45,6 @@ async def update_repository(operation: AgentOperation) -> AgentOperationResult:
         operation_result=OperationResult(
             operation_output='SUCCESS',
             operation_status=OperationResultStatus.SUCCESS
-        ), post_op=reload()
+        ), post_op=reload
     )
 

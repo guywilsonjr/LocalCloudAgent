@@ -1,5 +1,4 @@
 # Models should have minimal imports
-
 from datetime import datetime
 from typing import Any, Awaitable, Callable, Coroutine, Optional
 
@@ -32,9 +31,9 @@ class AgentOperation(BaseModel):
     status: OperationResultStatus
 
 
+
 class AgentOperationResult(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
     operation_result: OperationResult
-    post_op: Optional[Coroutine[Any, Any, None]] = None
+    post_op: Optional[Callable[[], Coroutine[Awaitable[None], None, None]]] = None
 
 
