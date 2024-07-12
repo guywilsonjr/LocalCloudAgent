@@ -15,8 +15,6 @@ from pyfakefs.fake_filesystem_unittest import Patcher
 from tests.common_test import test_constants
 
 
-
-
 @asynccontextmanager
 async def mock_async_open(fp: str, mode: str) -> Generator[Any, None, None]:
     class MockFileObj:
@@ -40,6 +38,8 @@ async def mock_async_open(fp: str, mode: str) -> Generator[Any, None, None]:
 
 
 aiofile.async_open = mock_async_open
+
+#aiofile.async_open = asynccontextmanager(mock_async_open)
 
 
 @pytest.fixture(scope='function')

@@ -1,9 +1,9 @@
 # Models should have minimal imports
 from datetime import datetime
-from typing import Any, Awaitable, Callable, Coroutine, Optional
+from typing import Any, Callable, Coroutine, Optional
 
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 
 class VersionInfo(BaseModel):
@@ -31,9 +31,12 @@ class AgentOperation(BaseModel):
     status: OperationResultStatus
 
 
+PostOperation = Callable[[AgentOperation], Coroutine[Any, Any, None]]
+
 
 class AgentOperationResult(BaseModel):
     operation_result: OperationResult
-    post_op: Optional[Callable[[], Coroutine[Awaitable[None], None, None]]] = None
+    post_op: Optional[PostOperation] = None
 
 
+OperationFunc = Callable[[AgentOperation], Coroutine[Any, Any, AgentOperationResult]]

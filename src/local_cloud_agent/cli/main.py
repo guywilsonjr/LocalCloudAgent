@@ -3,8 +3,12 @@ import os
 import click
 
 from common.configuration import agent_config
+
 from common import constants, systemd
-from app import app
+import typer
+
+# TODO: Use typer
+app = typer.Typer()
 
 
 def install_service() -> None:
@@ -51,4 +55,4 @@ def uninstall() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    app()

@@ -1,3 +1,5 @@
+from typing import Awaitable
+
 import aiofile
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 from common.configuration import agent_config
@@ -26,7 +28,8 @@ async def systemd_update() -> None:
     systemd.reload_systemd()
 
 
-async def reload() -> None:
+async def reload(operation: AgentOperation) -> None:
+    logger.info(f'Running post operation for operation: {operation}')
     systemd.reload_systemd()
 
 

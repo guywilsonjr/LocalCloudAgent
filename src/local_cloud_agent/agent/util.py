@@ -14,7 +14,7 @@ async def fetch_file_data(fp: str) -> Optional[str]:
     import os
     if os.path.exists(fp):
         async with async_open(fp, 'r') as f:
-            return await f.read()
+            return str(await f.read())
     else:
         return None
 
