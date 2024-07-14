@@ -27,7 +27,7 @@ def main() -> None:
         print('Running as root user')
 
 
-@main.command()
+@app.command()
 def install() -> None:
     logging.info('Creating metadata, configuration, and log directories')
     os.makedirs(agent_config.metadata_dir, exist_ok=True)
@@ -41,8 +41,8 @@ def install() -> None:
     logging.info('Systemd reloaded sucessfully')
 
 
-@main.command()
-@click.option('--purge', is_flag=True)
+@app.command()
+#@click.option('--purge', is_flag=True)
 def uninstall() -> None:
     pass
     '''''

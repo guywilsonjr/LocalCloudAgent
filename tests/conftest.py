@@ -74,16 +74,17 @@ def fake_base_fs():
     logging.info('fake_base_fs')
     import os
     from common import constants
-    assert not os.path.exists(constants.parent_conf_dir)
+    from common.configuration import agent_config
+    assert not os.path.exists(agent_config.etc_dir)
 
     base_dirs = [
         '/usr/lib/ssl/certs',
-        constants.parent_conf_dir,
-        constants.parent_log_dir,
-        constants.parent_metadata_dir,
-        constants.root_home_dir,
-        constants.system_usr_local_dir,
-        constants.installed_service_conf_dir
+        agent_config.etc_dir,
+        agent_config.var_log_dir,
+        agent_config.var_local_dir,
+        agent_config.home_dir,
+        agent_config.usr_local_dir,
+        constants.systemd_conf_dir
     ]
     [os.makedirs(base_dir) for base_dir in base_dirs]
     os.makedirs('/usr/bin')
@@ -93,7 +94,7 @@ def fake_base_fs():
     shutil.rmtree('/usr/local')
     shutil.rmtree('/etc')
     shutil.rmtree('/var')
-    shutil.rmtree('/root')
+    shutil.rmtree(agent_config.home_dir)
     shutil.rmtree('/usr/lib/ssl/certs')
 
 
@@ -117,18 +118,16 @@ def installed(aws: None):
     from common.configuration import agent_config
     os.makedirs(agent_config.agent_dir)
     os.makedirs(agent_config.operations_dir)
-    os.makedirs(constants.install_log_dir)
-    os.makedirs(f'{constants.installed_service_conf_dir}/{constants.lower_keyword}')
+    os.makedirs(agent_config.log_dir)
 
     with open(agent_config.installed_service_fp, 'w') as file:
         file.write(constants.service_file_data)
 
     yield
-    shutil.rmtree(f'{constants.installed_service_conf_dir}/{constants.lower_keyword}')
-    shutil.rmtree(constants.install_log_dir)
+    shutil.rmtree(agent_config.log_dir)
     shutil.rmtree(agent_config.metadata_dir)
     os.remove(constants.installed_service_conf_fp)
-    shutil.rmtree(constants.aws_dir)
+    shutil.rmtree(agent_config.aws_dir)
 
 
 @pytest.fixture(scope='function')

@@ -17,6 +17,7 @@ install_log_dir = f'{parent_log_dir}/{lower_keyword}'
 aws_dir = f'{root_home_dir}/.aws'
 aws_creds_fp = f'{aws_dir}/credentials'
 agent_dir = f'{metadata_dir}/agent'
+
 prefix_env_var = 'LOCAL_CLOUD_AGENT_PREFIX'
 # TODO REMOVE FILE AND FILE USAGES AND REPLACE WITH CREATED FILE BELOW
 service_file_data = f'''[Unit]
@@ -24,7 +25,6 @@ Description=Local Cloud Agent
 After=network.target
 
 [Service]
-ExecStart={os.environ['VIRTUAL_ENV']}/bin/python3 {repo_python_path}/main.py
+ExecStart={os.environ['VIRTUAL_ENV']}/bin/python3 ERROR/main.py
 Restart=always
-Environment="PYTHONPATH={repo_python_path}"
 '''

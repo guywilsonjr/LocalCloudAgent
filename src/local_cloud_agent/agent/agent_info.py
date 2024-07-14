@@ -10,7 +10,6 @@ from agent.models import AgentState
 from agent.post_config import logger
 from agent.util import BASE_API_URL, fetch_file_data, write_data_to_file
 
-
 @retry(wait=wait_exponential(), before=before_log(logger, logging.INFO)) # type: ignore
 async def register_agent_request(req: AgentRegisterRequest) -> AgentRegisterResponse:
     url = AgentRegisterRequest.get_url(BASE_API_URL)

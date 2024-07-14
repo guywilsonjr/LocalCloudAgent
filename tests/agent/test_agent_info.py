@@ -9,6 +9,19 @@ from tests.common_test import test_constants
 
 @pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
 @pytest.mark.asyncio
+async def test_register_agent_request():
+    from agent import agent_info
+    resp = await agent_info.get_registration()
+    assert resp == AgentRegisterResponse(
+        agent_id=test_constants.test_agent_id,
+        agent_key=test_constants.test_agent_key,
+        ip_address=test_constants.test_ip_address,
+        operations_queue_url=test_constants.test_operations_queue_url
+    )
+
+
+@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
+@pytest.mark.asyncio
 async def test_get_registration():
     from agent import agent_info
     resp = await agent_info.get_registration()

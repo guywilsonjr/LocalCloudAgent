@@ -1,8 +1,22 @@
 import os
+import re
 
 from pydantic import BaseModel
 from common import constants
 
+
+dir_pattern = r'^[\/\w+]+$'
+dir_regex = re.compile(dir_pattern)
+
+
+def get_parent_dir(dir_name: str) -> str:
+    dir_name = dir_name.strip()
+    if not dir_regex.match(dir_name):
+        raise ValueError(f'Invalid dir_name: {dir_name}')
+    if dir_name == '/':
+        return '/'
+    dir_name_parts = dir_name.split('/')
+    return '/'.join(dir_name_parts[:-1])
 
 
 class AgentConfig(BaseModel):
@@ -19,6 +33,15 @@ class AgentConfig(BaseModel):
         return self.get_prefixed_dir(constants.root_home_dir)
 
     @property
+    def var_local_dir(self) -> str:
+        return self.get_prefixed_dir(constants.var_local_dir)
+
+    @property
+    def var_log_dir(self) -> str:
+        return self.get_prefixed_dir(constants.var_log_dir)
+
+
+    @property
     def log_dir(self) -> str:
         return self.get_prefixed_dir(constants.install_log_dir)
 
@@ -32,8 +55,12 @@ class AgentConfig(BaseModel):
         return self.get_prefixed_dir(constants.metadata_dir)
 
     @property
+    def etc_dir(self) -> str:
+        return self.get_prefixed_dir(constants.etc_dir)
+
+    @property
     def conf_dir(self) -> str:
-        return self.get_prefixed_dir(constants.install_agent_conf_dir)
+        return f'{self.etc_dir}/{constants.lower_keyword}'
 
     @property
     def agent_dir(self) -> str:

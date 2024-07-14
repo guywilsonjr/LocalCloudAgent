@@ -51,7 +51,6 @@ dependencies = { file = ["requirements.txt"] }
 git_describe_command = "git describe --tags"
 
 [tool.mypy]
-files = ["src/local_cloud_agent"]
 cache_dir = '/dev/null'
 strict = true
 disallow_any_unimported = true
@@ -63,10 +62,13 @@ disallow_untyped_decorators = true
 warn_unreachable = true
 show_error_context = true
 show_error_code_links = true
+warn_incomplete_stub = true
 pretty = true
+explicit_package_bases = true
 plugins = [
     "pydantic.mypy"
 ]
+
 # Strict mode; enables the following flags:
 # --warn-unused-configs,
 # --disallow-any-generics
@@ -103,7 +105,10 @@ module = [
     "agent.operations.util",
     "agent.operations.send"
 ]
+follow_imports = "skip"
+
 disallow_any_expr = false
+disallow_any_explicit = false
 
 [[tool.mypy.overrides]]
 module = "common.systemd"
@@ -120,7 +125,8 @@ warn_required_dynamic_aliases = true
 
 
 [tool.pytest.ini_options]
-addopts = "--cov=src/local_cloud_agent"
+console_output_style = "progress-even-when-capture-no"
+addopts = "--cov=src/local_cloud_agent -s --cov-report=html -n=auto"
 asyncio_mode = "strict"
 pythonpath = "src/local_cloud_agent"
 testpaths = [
@@ -132,18 +138,26 @@ source = ["src/local_cloud_agent"]
 [tool.coverage.report]
 
 [tool.tox]
+
 legacy_tox_ini = """
 [tox]
 envlist = py312, mypy
 
 [testenv]
+parallel = all
+parallel-live = true
+parallel_show_output = true
 deps =
     -rrequirements-test.txt
     -rrequirements-cli.txt
 commands =
-    python3.12 -m pytest -s --log-cli-level=INFO
+    python3 -m pytest
 
 [testenv:mypy]
+parallel = all
+parallel-live = true
+parallel_show_output = true
+
 commands =
-    mypy
+    python3 -m mypy
 """
