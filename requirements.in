@@ -8,5 +8,6 @@ pydantic
 pygit2
 pystemd
 tenacity
+typer
 types-aioboto3[sqs]
 types-pygit2

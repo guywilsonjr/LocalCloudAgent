@@ -3,7 +3,7 @@ import logging
 import os
 import shutil
 import subprocess
-from typing import Generator
+from typing import Any, Generator
 
 import pytest
 import aiofile
@@ -15,15 +15,11 @@ from pyfakefs.fake_filesystem_unittest import Patcher
 from tests.common_test import test_constants
 
 
-class BaseMock:
-    def __init__(self, *args, **kwargs):
-        pass
-
 
 
 @asynccontextmanager
-async def mock_async_open(fp: str, mode: str) -> Generator[BaseMock, None, None]:
-    class MockFileObj(BaseMock):
+async def mock_async_open(fp: str, mode: str) -> Generator[Any, None, None]:
+    class MockFileObj:
         def __init__(self):
             logging.info('Opening file %s', fp)
             self.fh = open(fp, mode)
@@ -42,32 +38,6 @@ async def mock_async_open(fp: str, mode: str) -> Generator[BaseMock, None, None]
         if f:
             f.fh.close()
 
-
-def mock_venv_create(*args, **kwargs):
-    import os
-    from common.configuration import agent_config
-    logging.info('Making mock venv')
-    os.makedirs(agent_config.venv_dir)
-
-
-# Maybe use mocker for the git stuff
-import venv
-
-
-venv.create = mock_venv_create
-
-
-class SubprocessRunResult:
-    stdout: str = ''
-
-
-
-def mock_subprocess_run(*args, **kwargs):
-    logging.info('Mock Subprocess Running')
-    return SubprocessRunResult()
-
-
-subprocess.run = mock_subprocess_run
 
 aiofile.async_open = mock_async_open
 

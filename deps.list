@@ -1,4 +1,5 @@
-libgit2
 libsystemd
 pkg-config
 python-apt-dev
+pipx
+python3-dev

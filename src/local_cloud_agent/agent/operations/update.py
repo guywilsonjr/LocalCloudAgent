@@ -1,11 +1,10 @@
 import aiofile
-import pygit2
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 from common.configuration import agent_config
 from agent.post_config import logger
 from agent.models import AgentOperation, AgentOperationResult
 from agent.util import write_data_to_file, fetch_file_data
-from common import constants, git_common, systemd
+from common import constants, systemd
 
 
 async def check_systemd_service() -> None:
@@ -31,16 +30,15 @@ async def reload() -> None:
     systemd.reload_systemd()
 
 
-async def update_repository(operation: AgentOperation) -> AgentOperationResult:
-    logger.info('Updating Repository')
+async def update():
+    # TODO: STUFF
+    pass
+
+
+async def update_local_cloud_agent(operation: AgentOperation) -> AgentOperationResult:
+    logger.info('Updating Local Cloud Agent')
     await write_data_to_file(agent_config.update_operation_fp, operation.model_dump_json())
-
-    repo = pygit2.Repository(agent_config.repo_dir)
-
-    remote = repo.remotes["origin"]
-    remote.fetch()
-    latest_version = git_common.get_latest_available_version()
-    repo.checkout(f'refs/tags/{latest_version}')
+    await update()
     return AgentOperationResult(
         operation_result=OperationResult(
             operation_output='SUCCESS',

@@ -26,7 +26,7 @@ annotated-types==0.7.0
     #   pydantic
 attrs==23.2.0
     # via aiohttp
-aws-lambda-powertools==2.40.1
+aws-lambda-powertools==2.42.0
     # via -r requirements.in
 boto3==1.34.131
     # via aiobotocore
@@ -35,7 +35,7 @@ botocore==1.34.131
     #   aiobotocore
     #   boto3
     #   s3transfer
-botocore-stubs==1.34.142
+botocore-stubs==1.34.149
     # via
     #   types-aioboto3
     #   types-aiobotocore
@@ -44,7 +44,9 @@ caio==0.9.17
 cffi==1.16.0
     # via pygit2
 click==8.1.7
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   typer
 cumulonimbus-models @ git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1
     # via -r requirements.in
 frozenlist==1.4.1
@@ -60,6 +62,10 @@ jmespath==1.0.1
     #   botocore
 lxml==5.2.2
     # via pystemd
+markdown-it-py==3.0.0
+    # via rich
+mdurl==0.1.2
+    # via markdown-it-py
 multidict==6.0.5
     # via
     #   aiohttp
@@ -78,15 +84,23 @@ pydantic-core==2.18.3
     #   pydantic
 pygit2==1.15.1
     # via -r requirements.in
+pygments==2.18.0
+    # via rich
 pystemd==0.13.2
     # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via botocore
+rich==13.7.1
+    # via typer
 s3transfer==0.10.2
     # via boto3
+shellingham==1.5.4
+    # via typer
 six==1.16.0
     # via python-dateutil
 tenacity==8.5.0
+    # via -r requirements.in
+typer==0.12.3
     # via -r requirements.in
 types-aioboto3[sqs]==13.1.1
     # via -r requirements.in
@@ -94,15 +108,15 @@ types-aiobotocore==2.13.1
     # via types-aioboto3
 types-aiobotocore-sqs==2.13.1
     # via types-aioboto3
-types-awscrt==0.21.0
+types-awscrt==0.21.2
     # via botocore-stubs
 types-cffi==1.16.0.20240331
     # via types-pygit2
-types-pygit2==1.15.0.20240708
+types-pygit2==1.15.0.20240714
     # via -r requirements.in
 types-s3transfer==0.10.1
     # via types-aioboto3
-types-setuptools==70.3.0.20240710
+types-setuptools==71.1.0.20240726
     # via types-cffi
 typing-extensions==4.12.0
     # via
@@ -110,6 +124,7 @@ typing-extensions==4.12.0
     #   cumulonimbus-models
     #   pydantic
     #   pydantic-core
+    #   typer
 urllib3==2.2.2
     # via botocore
 wrapt==1.16.0

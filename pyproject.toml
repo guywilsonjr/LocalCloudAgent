@@ -31,6 +31,8 @@ classifiers = [
 Homepage = "https://github.com/guywilsonjr/LocalCloudAgent"
 Repository = "https://github.com/guywilsonjr/LocalCloudAgent"
 
+[project.scripts]
+local-cloud-agent = "local_cloud_agent.cli.main:main"
 
 [build-system]
 requires = ["setuptools"]
@@ -39,7 +41,7 @@ build-backend = "setuptools.build_meta"
 include-package-data = true
 
 [tool.setuptools.packages.find]
-where = ["src/local_cloud_agent"]
+where = ["src"]
 
 
 [tool.setuptools.dynamic]

@@ -1,5 +1,5 @@
 import logging
-from typing import cast, Dict, List, Literal, Optional, Tuple, TypedDict
+from typing import cast, List, Optional, Tuple, TypedDict
 import re
 import pygit2
 from agent.models import VersionInfo

@@ -9,8 +9,6 @@ from common.configuration import agent_config
 from agent.models import AgentState
 from agent.post_config import logger
 from agent.util import BASE_API_URL, fetch_file_data, write_data_to_file
-from common.git_common import get_version
-
 
 
 @retry(wait=wait_exponential(), before=before_log(logger, logging.INFO)) # type: ignore
