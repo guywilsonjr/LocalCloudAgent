@@ -80,7 +80,7 @@ class AgentConfig(BaseModel):
 
     @property
     def agent_log_fp(self) -> str:
-        return f'{self.log_dir}/local_cloud_agent.log'
+        return f'{self.log_dir}/{constants.lower_keyword}.log'
 
     @property
     def operation_log_fp(self) -> str:

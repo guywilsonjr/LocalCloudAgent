@@ -35,10 +35,10 @@ Repository = "https://github.com/guywilsonjr/LocalCloudAgent"
 local-cloud-agent = "local_cloud_agent.cli.main:main"
 
 [build-system]
-requires = ["setuptools", "setuptools_scm>=8"]
+# for mypy to run with mypy pydantic plugin need pydantic as well
+requires = ["setuptools", "mypy[mypyc]", "pydantic", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
-[tool.setuptools]
-include-package-data = true
+
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -51,6 +51,7 @@ dependencies = { file = ["requirements.txt"] }
 git_describe_command = "git describe --tags"
 
 [tool.mypy]
+files = ["src/local_cloud_agent"]
 cache_dir = '/dev/null'
 strict = true
 disallow_any_unimported = true
@@ -64,10 +65,8 @@ show_error_context = true
 show_error_code_links = true
 warn_incomplete_stub = true
 pretty = true
-explicit_package_bases = true
-plugins = [
-    "pydantic.mypy"
-]
+namespace_packages = false
+plugins = ["pydantic.mypy"]
 
 # Strict mode; enables the following flags:
 # --warn-unused-configs,
@@ -105,7 +104,6 @@ module = [
     "agent.operations.util",
     "agent.operations.send"
 ]
-follow_imports = "skip"
 
 disallow_any_expr = false
 disallow_any_explicit = false
@@ -125,13 +123,11 @@ warn_required_dynamic_aliases = true
 
 
 [tool.pytest.ini_options]
+
 console_output_style = "progress-even-when-capture-no"
 addopts = "--cov=src/local_cloud_agent -s --cov-report=html -n=auto"
 asyncio_mode = "strict"
-pythonpath = "src/local_cloud_agent"
-testpaths = [
-    "tests"
-]
+
 
 [tool.coverage.run]
 source = ["src/local_cloud_agent"]

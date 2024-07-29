@@ -12,7 +12,7 @@ from contextlib import asynccontextmanager
 
 from pyfakefs.fake_filesystem_unittest import Patcher
 
-from tests.common_test import test_constants
+from common_test import test_constants
 
 
 @asynccontextmanager
@@ -35,7 +35,6 @@ async def mock_async_open(fp: str, mode: str) -> Generator[Any, None, None]:
     finally:
         if f:
             f.fh.close()
-
 
 aiofile.async_open = mock_async_open
 
@@ -74,7 +73,7 @@ def fake_base_fs():
     logging.info('fake_base_fs')
     import os
     from common import constants
-    from common.configuration import agent_config
+    from common.common_logger import agent_config
     assert not os.path.exists(agent_config.etc_dir)
 
     base_dirs = [
@@ -103,7 +102,7 @@ def fake_base_fs():
 def aws():
     logging.info('aws')
     import os
-    from common.configuration import agent_config
+    from common.common_logger import agent_config
     os.makedirs(agent_config.aws_dir)
     with open(agent_config.aws_creds_fp, 'w') as f:
         f.write('')
@@ -115,16 +114,14 @@ def installed(aws: None):
     logging.info('installed')
     import os
     from common import constants
-    from common.configuration import agent_config
+    from common.common_logger import agent_config
     os.makedirs(agent_config.agent_dir)
     os.makedirs(agent_config.operations_dir)
-    os.makedirs(agent_config.log_dir)
 
     with open(agent_config.installed_service_fp, 'w') as file:
         file.write(constants.service_file_data)
 
     yield
-    shutil.rmtree(agent_config.log_dir)
     shutil.rmtree(agent_config.metadata_dir)
     os.remove(constants.installed_service_conf_fp)
     shutil.rmtree(agent_config.aws_dir)
@@ -133,7 +130,7 @@ def installed(aws: None):
 @pytest.fixture(scope='function')
 def registered_agent():
     import os
-    from common.configuration import agent_config
+    from common.common_logger import agent_config
     with open(agent_config.agent_registration_fp, 'w') as f:
         f.write(
             json.dumps(
