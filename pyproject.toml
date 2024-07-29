@@ -35,7 +35,7 @@ Repository = "https://github.com/guywilsonjr/LocalCloudAgent"
 local-cloud-agent = "local_cloud_agent.cli.main:main"
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 [tool.setuptools]
 include-package-data = true
@@ -48,6 +48,7 @@ where = ["src"]
 dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools_scm]
+git_describe_command = "git describe --tags"
 
 [tool.mypy]
 cache_dir = '/dev/null'
