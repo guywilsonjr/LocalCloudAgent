@@ -43,7 +43,7 @@ build-backend = "setuptools.build_meta"
 include-package-data = true
 
 [tool.setuptools.package-dir]
-"" = "src/local_cloud_agent"
+common = "src/local_cloud_agent"
 [tool.setuptools.packages.find]
 where = ["src"]
 
