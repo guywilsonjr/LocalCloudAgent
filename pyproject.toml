@@ -36,7 +36,7 @@ local-cloud-agent = "local_cloud_agent.cli.main:main"
 
 [build-system]
 # for mypy to run with mypy pydantic plugin need pydantic as well
-requires = ["setuptools", "mypy[mypyc]", "pydantic", "setuptools_scm>=8", "cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1"]
+requires = ["setuptools", "setuptools_scm>=8"] #"mypy[mypyc]", "pydantic", "cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]

@@ -1,7 +1,7 @@
 import os
 
 from mypyc.build import mypycify
-from setuptools import find_namespace_packages, setup, find_packages
+from setuptools import setup, find_packages
 
 
 
