@@ -161,5 +161,7 @@ commands =
 #[tool.cibuildwheel.config-settings]
 #--build-option = "--use-mypyc"
 
+[tool.cibuildwheel]
+container-engine = "docker; create_args: -v /var/run/docker.sock:/var/run/docker.sock"
 [tool.cibuildwheel.linux]
-archs = ["x86_64"]
+archs = ["aarch64"]

@@ -1,10 +1,12 @@
+import os
+
 from mypyc.build import mypycify
 from setuptools import find_namespace_packages, setup, find_packages
 
 
 
-files = find_packages(where='src')
-print('Found files: ', files)
+all_files = find_packages(where='src')
+print('Found files: ', all_files)
 common_flags = [
     "--strict",
     "--disallow-any-decorated",
@@ -17,12 +19,19 @@ common_flags = [
     "--pretty",
     "--no-namespace-packages"
 ]
-tokens = [token for file in files for token in ['-p', file]]
+tokens = [token for file in all_files for token in ['-p', file]]
 all_command_args = [*(tokens[1:])]
 comstr = ' '.join(all_command_args)
-print(comstr)
-print(files)
-setup(ext_modules=mypycify(paths=['src/local_cloud_agent/__init__.py'], verbose=True, strip_asserts=True))
+
+
+all_files = [fp for fp in [os.path.join(dirpath, f) for (dirpath, dirnames, paths) in os.walk('src/local_cloud_agent') for f in paths] if fp.endswith('.py')]
+
+print('Found files: ', all_files)
+test_files = [
+    'src/local_cloud_agent/__init__.py',
+    'src/local_cloud_agent/common/__init__.py',
+]
+setup(ext_modules=mypycify(paths=test_files, verbose=True, strip_asserts=True))
 
 # RESERVED FOR TRACKING
 allow_any_expr_explicit_files = [
