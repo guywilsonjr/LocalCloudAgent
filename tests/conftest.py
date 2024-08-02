@@ -1,8 +1,13 @@
+import os
+if 'INDOCKER' not in os.environ:
+    raise Exception('INDOCKER not in os.environ')
+
+if os.environ.get('INDOCKER') != '1':
+    raise Exception('INDOCKER not set to 1')
 import json
 import logging
-import os
+
 import shutil
-import subprocess
 from typing import Any, Generator
 
 import pytest
@@ -48,25 +53,6 @@ def root_fakefs():
         yield patcher.fs
 
 
-@pytest.fixture(scope='function')
-def usr_local_src(monkeypatch, tmp_path):
-    logging.info('usr_local_src')
-    with monkeypatch.context() as m:
-        from common import constants
-        m.setenv(constants.repo_prefix_env_var, str(tmp_path))
-        os.makedirs(f'{tmp_path}/usr/local/src')
-        yield
-
-
-@pytest.fixture(scope='function')
-def installed_repo_dir(monkeypatch, tmp_path):
-    logging.info('installed_repo_dir')
-    with monkeypatch.context() as m:
-        m.setenv('LOCAL_CLOUD_AGENT_REPO_PREFIX', str(tmp_path))
-        from common import git_common
-        git_common.clone_repo()
-        yield
-
 
 @pytest.fixture(scope='function')
 def fake_base_fs():
@@ -82,8 +68,7 @@ def fake_base_fs():
         agent_config.var_log_dir,
         agent_config.var_local_dir,
         agent_config.home_dir,
-        agent_config.usr_local_dir,
-        constants.systemd_conf_dir
+        agent_config.conf_dir
     ]
     [os.makedirs(base_dir) for base_dir in base_dirs]
     os.makedirs('/usr/bin')

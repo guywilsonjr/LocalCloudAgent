@@ -1,8 +1,10 @@
 export AWS_DEFAULT_REGION=$(aws configure get region)
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account |  tr -d '"')
 
+alias build='docker buildx build -f test.Dockerfile . -t local-cloud-agent-test --load'
+alias test='docker run --privileged -it  local-cloud-agent-test'
 alias ecrlogin='aws ecr get-login-password | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com'
-alias clean='rm -rf .tox build cdk.out .mypy_cache ./**/__pycahce__'
+alias clean='rm -rf .tox build cdk.out .mypy_cache ./**/__pycahce__ build/'
 alias install_reqs='upgrade_deps && pip install -Ur requirements.in -r requirements-dev.txt -r requirements-test.txt'
 alias revenv='deactivate && python3.12 -m venv .venv --upgrade-deps && source .venv/bin/activate && install_reqs'
 export PYTHONPATH=$PYTHONPATH:$(pwd)/src/local_cloud_agent

@@ -9,7 +9,7 @@ from agent.operations.post_ops import complete_operation
 from agent.operations.util import init_operation
 from agent.operations.ops import operations_map
 from agent.agent_info import get_agent_state
-from agent.models import AgentOperation, AgentOperationResult, AgentState, OperationFunc, PostOperation
+from agent.models import AgentOperation, AgentOperationResult, AgentState, OperationFunc
 from agent.util import aiosession
 from agent.post_config import logger
 

@@ -1,6 +1,6 @@
 [project]
 name = "local-cloud-agent"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dynamic = ["dependencies", "version"]
 
 
@@ -36,9 +36,11 @@ local-cloud-agent = "local_cloud_agent.cli.main:main"
 
 [build-system]
 # for mypy to run with mypy pydantic plugin need pydantic as well
-requires = ["setuptools", "mypy[mypyc]", "pydantic", "setuptools_scm>=8"]
+requires = ["setuptools", "mypy[mypyc]", "pydantic", "setuptools_scm>=8", "cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -51,6 +53,7 @@ dependencies = { file = ["requirements.txt"] }
 git_describe_command = "git describe --tags"
 
 [tool.mypy]
+mypy_path = "src/local_cloud_agent"
 files = ["src/local_cloud_agent"]
 cache_dir = '/dev/null'
 strict = true
@@ -65,9 +68,9 @@ show_error_context = true
 show_error_code_links = true
 warn_incomplete_stub = true
 pretty = true
-namespace_packages = false
+namespace_packages = true
 plugins = ["pydantic.mypy"]
-
+explicit_package_bases = true
 # Strict mode; enables the following flags:
 # --warn-unused-configs,
 # --disallow-any-generics
@@ -90,13 +93,10 @@ plugins = ["pydantic.mypy"]
 # impractical in real code. For example, this prohibits partial overlap
 # in TypedDict updates, and makes arguments prepended via Concatenate
 # positional-only (inverse: --no-extra-checks)
-[[tool.mypy.overrides]]
-module = 'pystemd.systemd1'
-ignore_missing_imports = true
+
 
 [[tool.mypy.overrides]]
 module = [
-    "common.systemd",
     "agent.agent_info",
     "agent.util",
     "agent.post_config",
@@ -108,9 +108,6 @@ module = [
 disallow_any_expr = false
 disallow_any_explicit = false
 
-[[tool.mypy.overrides]]
-module = "common.systemd"
-disallow_any_unimported = false
 
 [[tool.mypy.overrides]]
 module = ["agent.post_config", "agent.models"]
@@ -125,12 +122,13 @@ warn_required_dynamic_aliases = true
 [tool.pytest.ini_options]
 
 console_output_style = "progress-even-when-capture-no"
-addopts = "--cov=src/local_cloud_agent -s --cov-report=html -n=auto"
+addopts = "--cov=src -s --cov-report=html -n=auto"
 asyncio_mode = "strict"
-
+log_cli_level = "INFO"
 
 [tool.coverage.run]
-source = ["src/local_cloud_agent"]
+source = ["src"]
+
 [tool.coverage.report]
 
 [tool.tox]
@@ -141,19 +139,27 @@ envlist = py312, mypy
 
 [testenv]
 parallel = all
-parallel-live = true
 parallel_show_output = true
+
+setenv =
+    INDOCKER = {env:INDOCKER}
+    PYTHONPATH = {toxinidir}/src/local_cloud_agent
 deps =
     -rrequirements-test.txt
-    -rrequirements-cli.txt
 commands =
-    python3 -m pytest
+    python3 -m pytest tests/cli
 
 [testenv:mypy]
 parallel = all
-parallel-live = true
 parallel_show_output = true
 
 commands =
     python3 -m mypy
 """
+# TODO
+
+#[tool.cibuildwheel.config-settings]
+#--build-option = "--use-mypyc"
+
+[tool.cibuildwheel.linux]
+archs = ["x86_64"]

@@ -7,9 +7,12 @@ from cumulonimbus_models.operations import OperationResult, UpdateOperationResul
 from agent.post_config import logger
 from agent.models import AgentState, AgentOperation
 from agent.util import BASE_API_URL
-
-
-async def send_operation_result(agent_state: AgentState, operation: AgentOperation, output: OperationResult) -> None:
+from typing import Any
+#TODO
+async def send_operation_result(a: Any, b: Any, c: Any) -> None:
+    return None
+"""
+async def send_operation_results(agent_state: AgentState, operation: AgentOperation, output: OperationResult) -> None:
     update_result_req = UpdateOperationResultRequest(
         operation_result=output,
         started=operation.started,
@@ -20,4 +23,4 @@ async def send_operation_result(agent_state: AgentState, operation: AgentOperati
         async with session.patch(url, json=json.loads(update_result_req.model_dump_json())) as resp:
             if resp.status != 200:
                 logger.error(f'Failed to send operation result: {resp.status} - {await resp.text()}')
-
+"""

@@ -10,8 +10,12 @@ from agent.models import AgentState
 from agent.post_config import logger
 from agent.util import BASE_API_URL, fetch_file_data, write_data_to_file
 
-@retry(wait=wait_exponential(), before=before_log(logger, logging.INFO)) # type: ignore
+
 async def register_agent_request(req: AgentRegisterRequest) -> AgentRegisterResponse:
+    return AgentRegisterResponse(agent_id='TODO', agent_key='dd', operations_queue_url='TODO', ip_address='TODO')
+"""
+#@retry(wait=wait_exponential(), before=before_log(logger._logger, logging.INFO))
+async def register_agent_requester(req: AgentRegisterRequest) -> AgentRegisterResponse:
     url = AgentRegisterRequest.get_url(BASE_API_URL)
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=req.model_dump()) as resp:
@@ -20,7 +24,7 @@ async def register_agent_request(req: AgentRegisterRequest) -> AgentRegisterResp
                 logger.exception(err)
                 raise err
             return AgentRegisterResponse(**(await resp.json()))
-
+"""
 
 async def register_agent() -> AgentRegisterResponse:
     hostname = socket.gethostname()
@@ -45,8 +49,9 @@ async def get_registration() -> AgentRegisterResponse:
 
 async def get_agent_state() -> AgentState:
     agent_registration = await get_registration()
+    # TODO
     return AgentState(
         agent_id=agent_registration.agent_id,
         queue_url=agent_registration.operations_queue_url,
-        version=get_version()
+        version='TODO'
     )

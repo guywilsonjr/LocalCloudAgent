@@ -5,7 +5,6 @@ from agent.models import AgentOperation, AgentState
 from agent.operations.post_ops import complete_operation
 from agent.post_config import logger
 from agent.util import fetch_file_data
-from common.git_common import get_version
 
 
 async def check_for_updates(agent_state: AgentState) -> None:
@@ -23,7 +22,8 @@ async def check_for_updates(agent_state: AgentState) -> None:
 
 
 async def startup(agent_state: AgentState) -> None:
-    version = get_version()
+    # TODO
+    version = """TODO"""
     logger.info(f'Starting Local Cloud Agent version: {version}')
     await check_for_updates(agent_state)
 

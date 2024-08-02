@@ -1,2 +1,4 @@
 pip-tools
 tox
+mypy
+pydantic

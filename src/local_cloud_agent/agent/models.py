@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any, Callable, Coroutine, Optional
 
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus
-from pydantic import BaseModel
+from pydantic.main import BaseModel
 
 
 class VersionInfo(BaseModel):

@@ -3,8 +3,7 @@ import logging
 import os
 import traceback
 
-import pystemd
-from click.testing import CliRunner, Result
+from typer.testing import CliRunner, Result
 
 
 def log_cli_result(result: Result) -> None:
@@ -22,17 +21,20 @@ def log_cli_result(result: Result) -> None:
     )
 
 
-def test_main(monkeypatch) -> None:
-    runner = CliRunner()
-    with runner.isolated_filesystem('/tmp') as tmpdir:
-        with monkeypatch.context() as m:
-            m.setattr('common.systemd.reload_systemd', lambda: None)
-            m.setenv('LOCAL_CLOUD_AGENT_PREFIX', tmpdir)
-            m.setattr(os, 'geteuid', lambda: 0)
-            logging.info(f'Using Isolated filesystem: {tmpdir}')
-            from cli import main
-            result: Result = runner.invoke(main.main, ['install'])
+def assert_dir_exists(dir: str) -> None:
+    assert os.path.exists(dir)
 
-            log_cli_result(result)
-            assert result.exit_code == 0
-            assert result.output == ''
+
+def test_main() -> None:
+    runner = CliRunner()
+    from cli import main
+    result: Result = runner.invoke(main.app, ['install'])
+
+    log_cli_result(result)
+    assert result.exit_code == 0
+    from common.configuration import agent_config
+    exp_dirs = [agent_config.metadata_dir, agent_config.conf_dir, agent_config.log_dir, agent_config.installed_service_fp]
+
+    # noinspection PyStatementEffect
+    [i for i in map(lambda x: assert_dir_exists(x), exp_dirs)]
+

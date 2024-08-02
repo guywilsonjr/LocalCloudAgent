@@ -5,8 +5,6 @@ aws-lambda-powertools
 click
 cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1
 pydantic
-pygit2
-pystemd
 tenacity
 typer
 types-aioboto3[sqs]

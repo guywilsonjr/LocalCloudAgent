@@ -1,29 +1,15 @@
 import os
-import re
 
 from pydantic.main import BaseModel
 from common import constants
 
-
-dir_pattern = r'^[\/\w+]+$'
-dir_regex = re.compile(dir_pattern)
-
-
-def get_parent_dir(dir_name: str) -> str:
-    dir_name = dir_name.strip()
-    if not dir_regex.match(dir_name):
-        raise ValueError(f'Invalid dir_name: {dir_name}')
-    if dir_name == '/':
-        return '/'
-    dir_name_parts = dir_name.split('/')
-    return '/'.join(dir_name_parts[:-1])
 
 
 class AgentConfig(BaseModel):
 
     @property
     def prefix(self) -> str:
-        return os.environ.get(str(constants.prefix_env_var), '')
+        return os.environ.get(constants.prefix_env_var, '')
 
     def get_prefixed_dir(self, dir_name: str) -> str:
         return f'{self.prefix.rstrip("/")}/{dir_name.lstrip("/")}'
@@ -31,15 +17,6 @@ class AgentConfig(BaseModel):
     @property
     def home_dir(self) -> str:
         return self.get_prefixed_dir(constants.root_home_dir)
-
-    @property
-    def var_local_dir(self) -> str:
-        return self.get_prefixed_dir(constants.var_local_dir)
-
-    @property
-    def var_log_dir(self) -> str:
-        return self.get_prefixed_dir(constants.var_log_dir)
-
 
     @property
     def log_dir(self) -> str:
@@ -55,12 +32,8 @@ class AgentConfig(BaseModel):
         return self.get_prefixed_dir(constants.metadata_dir)
 
     @property
-    def etc_dir(self) -> str:
-        return self.get_prefixed_dir(constants.etc_dir)
-
-    @property
     def conf_dir(self) -> str:
-        return f'{self.etc_dir}/{constants.lower_keyword}'
+        return self.get_prefixed_dir(constants.install_agent_conf_dir)
 
     @property
     def agent_dir(self) -> str:
@@ -80,7 +53,7 @@ class AgentConfig(BaseModel):
 
     @property
     def agent_log_fp(self) -> str:
-        return f'{self.log_dir}/{constants.lower_keyword}.log'
+        return f'{self.log_dir}/local_cloud_agent.log'
 
     @property
     def operation_log_fp(self) -> str:
