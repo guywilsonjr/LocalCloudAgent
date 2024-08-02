@@ -41,8 +41,9 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 include-package-data = true
-package-dir = { "" = "src" }
 
+[tool.setuptools.package-dir]
+"" = "src/local_cloud_agent"
 [tool.setuptools.packages.find]
 where = ["src"]
 
@@ -51,7 +52,7 @@ where = ["src"]
 dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools_scm]
-git_describe_command = "git describe --tags"
+git_describe_command = "git describe --ltags"
 
 [tool.mypy]
 mypy_path = "src/local_cloud_agent"
