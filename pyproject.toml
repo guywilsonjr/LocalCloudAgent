@@ -79,7 +79,7 @@ show_error_code_links = true
 warn_incomplete_stub = true
 pretty = true
 namespace_packages = true
-plugins = ["pydantic.v1.mypy"]
+plugins = ["pydantic.mypy"]
 explicit_package_bases = true
 # Strict mode; enables the following flags:
 # --warn-unused-configs,

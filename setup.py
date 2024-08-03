@@ -31,7 +31,8 @@ print('Found files: ', all_files)
 test_files = [
     'local_cloud_agent',
 ]
-
+setup()
+'''
 setup(
     ext_modules=mypycify(
         paths=[
@@ -41,7 +42,7 @@ setup(
         strip_asserts=True
     )
 )
-
+'''
 # RESERVED FOR TRACKING
 allow_any_expr_explicit_files = [
    "agent.agent_info",

@@ -11,6 +11,7 @@ class AgentConfig(BaseModel):
     def prefix(self) -> str:
         return os.environ.get(constants.prefix_env_var, '')
 
+
     def get_prefixed_dir(self, dir_name: str) -> str:
         return f'{self.prefix.rstrip("/")}/{dir_name.lstrip("/")}'
 

@@ -7,9 +7,10 @@ from cumulonimbus_models.agent import AgentRegisterRequest, AgentRegisterRespons
 from tenacity import before_log, retry, wait_exponential
 from local_cloud_agent.common.configuration import agent_config
 from local_cloud_agent.agent.models import AgentState
-from local_cloud_agent.agent.post_config import logger
-from local_cloud_agent.agent.util import BASE_API_URL, fetch_file_data, write_data_to_file
 
+#from local_cloud_agent.agent.post_config import logger
+from local_cloud_agent.agent.util import BASE_API_URL, fetch_file_data, write_data_to_file
+logger=logging.getLogger(__name__)
 
 async def register_agent_request(req: AgentRegisterRequest) -> AgentRegisterResponse:
     return AgentRegisterResponse(agent_id='TODO', agent_key='dd', operations_queue_url='TODO', ip_address='TODO')
