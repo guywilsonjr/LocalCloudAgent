@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from common.configuration import ensure_dirs_exist, validate_fs, agent_config
+from local_cloud_agent.common.configuration import ensure_dirs_exist, validate_fs, agent_config
 
 
 @pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "aws")

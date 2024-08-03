@@ -1,5 +1,6 @@
 import os
 
+
 from mypyc.build import mypycify
 from setuptools import setup, find_packages
 
@@ -28,10 +29,18 @@ all_files = [fp for fp in [os.path.join(dirpath, f) for (dirpath, dirnames, path
 
 print('Found files: ', all_files)
 test_files = [
-    'src/local_cloud_agent/__init__.py',
-    'src/local_cloud_agent/common/__init__.py',
+    'local_cloud_agent',
 ]
-setup(ext_modules=mypycify(paths=test_files, verbose=True, strip_asserts=True))
+
+setup(
+    ext_modules=mypycify(
+        paths=[
+            'src/local_cloud_agent'
+        ],
+        verbose=True,
+        strip_asserts=True
+    )
+)
 
 # RESERVED FOR TRACKING
 allow_any_expr_explicit_files = [

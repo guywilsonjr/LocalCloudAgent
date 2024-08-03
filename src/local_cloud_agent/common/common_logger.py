@@ -2,7 +2,7 @@ import os
 import re
 
 from pydantic.main import BaseModel
-from common import constants
+from local_cloud_agent.common import constants
 
 
 dir_pattern = r'^[\/\w+]+$'

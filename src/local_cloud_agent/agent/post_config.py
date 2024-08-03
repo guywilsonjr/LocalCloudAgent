@@ -4,7 +4,7 @@ import sys
 from typing import Any, Dict
 
 from aws_lambda_powertools import Logger
-from common.configuration import agent_config
+from local_cloud_agent.common.configuration import agent_config
 
 
 def serialize_log(json_data: Dict[str, Any]) -> str:

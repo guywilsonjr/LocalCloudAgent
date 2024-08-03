@@ -2,7 +2,7 @@ from datetime import datetime
 
 from cumulonimbus_models.operations import Operation, OperationResultStatus, OperationType
 
-from agent.models import AgentOperation, AgentState, VersionInfo
+from local_cloud_agent.agent.models import AgentOperation, AgentState, VersionInfo
 
 
 test_agent_id = 'test-agent-id'

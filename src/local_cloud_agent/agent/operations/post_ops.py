@@ -1,9 +1,9 @@
 from cumulonimbus_models.operations import OperationResult
 
-from common.configuration import agent_config
-from agent.models import AgentState, AgentOperation
-from agent.operations.send import send_operation_result
-from agent.util import append_data_to_file
+from local_cloud_agent.common.configuration import agent_config
+from local_cloud_agent.agent.models import AgentState, AgentOperation
+from local_cloud_agent.agent.operations.send import send_operation_result
+from local_cloud_agent.agent.util import append_data_to_file
 
 
 async def complete_operation(agent_state: AgentState, operation: AgentOperation, output: OperationResult) -> None:

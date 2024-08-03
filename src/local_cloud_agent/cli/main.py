@@ -1,9 +1,9 @@
 import logging
 import os
 
-from common.configuration import agent_config
+from local_cloud_agent.common.configuration import agent_config
 
-from common import constants, err_constants
+from local_cloud_agent.common import constants, err_constants
 import typer
 
 # TODO: Use typer

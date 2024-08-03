@@ -2,9 +2,9 @@ from datetime import datetime
 
 from cumulonimbus_models.operations import Operation, OperationResultStatus
 from types_aiobotocore_sqs.type_defs import MessageTypeDef
-from agent.models import AgentOperation
-from common.configuration import agent_config
-from agent.util import append_data_to_file
+from local_cloud_agent.agent.models import AgentOperation
+from local_cloud_agent.common.configuration import agent_config
+from local_cloud_agent.agent.util import append_data_to_file
 
 
 async def init_operation(message: MessageTypeDef) -> AgentOperation:

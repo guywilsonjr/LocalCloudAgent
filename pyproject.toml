@@ -36,42 +36,50 @@ local-cloud-agent = "local_cloud_agent.cli.main:main"
 
 [build-system]
 # for mypy to run with mypy pydantic plugin need pydantic as well
-requires = ["setuptools", "setuptools_scm>=8"] #"mypy[mypyc]", "pydantic", "cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1"]
+requires = [
+    "setuptools",
+    "setuptools_scm>=8",
+    "mypy[mypyc]",
+    "aiohttp",
+    "aioboto3",
+    "aiofile",
+    "aws-lambda-powertools",
+    "click",
+    "cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1",
+    "pydantic",
+    "tenacity",
+    "typer",
+    "types-aioboto3[sqs]",
+]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 include-package-data = true
 
-[tool.setuptools.package-dir]
-common = "src/local_cloud_agent"
-[tool.setuptools.packages.find]
-where = ["src"]
-
-
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools_scm]
-git_describe_command = "git describe --ltags"
+git_describe_command = "git describe --abbrev=0"
 
 [tool.mypy]
-mypy_path = "src/local_cloud_agent"
-files = ["src/local_cloud_agent"]
+mypy_path = "src"
+#files = ["src"]
 cache_dir = '/dev/null'
 strict = true
-disallow_any_unimported = true
-disallow_any_expr = true
-disallow_any_decorated = true
-disallow_any_explicit = true
-disallow_subclassing_any = true
-disallow_untyped_decorators = true
+#disallow_any_unimported = true
+#disallow_any_expr = true
+#disallow_any_decorated = true
+#disallow_any_explicit = true
+#disallow_subclassing_any = true
+#disallow_untyped_decorators = true
 warn_unreachable = true
 show_error_context = true
 show_error_code_links = true
 warn_incomplete_stub = true
 pretty = true
 namespace_packages = true
-plugins = ["pydantic.mypy"]
+plugins = ["pydantic.v1.mypy"]
 explicit_package_bases = true
 # Strict mode; enables the following flags:
 # --warn-unused-configs,

@@ -1,5 +1,5 @@
 from cumulonimbus_models.operations import OperationType
-from agent.operations.update import update_local_cloud_agent
+from local_cloud_agent.agent.operations.update import update_local_cloud_agent
 
 
 operations_map = {

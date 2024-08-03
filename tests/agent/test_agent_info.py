@@ -3,7 +3,7 @@ import logging
 import pytest
 from cumulonimbus_models.agent import AgentRegisterResponse
 
-from agent.models import AgentState
+from local_cloud_agent.agent.models import AgentState
 from tests.common_test import test_constants
 
 

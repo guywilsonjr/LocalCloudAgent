@@ -32,7 +32,7 @@ def test_main() -> None:
 
     log_cli_result(result)
     assert result.exit_code == 0
-    from common.configuration import agent_config
+    from local_cloud_agent.common.configuration import agent_config
     exp_dirs = [agent_config.metadata_dir, agent_config.conf_dir, agent_config.log_dir, agent_config.installed_service_fp]
 
     # noinspection PyStatementEffect

@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
-from agent.models import AgentState, AgentOperation
+from local_cloud_agent.agent.models import AgentState, AgentOperation
 from common_test import test_constants, test_mocks
 
 
@@ -19,6 +19,6 @@ async def test_complete_operation(mocker):
     test_agent_state = AgentState(agent_id='test-agent-id', queue_url='test-queue-url', version='test-version')
     resp = test_mocks.MockAIOHttpResponse()
     a = mocker.patch('aiohttp.ClientSession.patch', return_value=resp)
-    from agent.operations import send
+    from local_cloud_agent.agent.operations import send
     await send.send_operation_result(test_agent_state, test_persist_op, test_output)
     a.assert_called_once()

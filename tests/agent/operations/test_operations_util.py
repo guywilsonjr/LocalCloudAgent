@@ -4,8 +4,8 @@ import pytest
 from types_aiobotocore_sqs.type_defs import MessageTypeDef
 from cumulonimbus_models.operations import OperationResultStatus
 
-from agent.models import AgentOperation
-from common.configuration import agent_config
+from local_cloud_agent.agent.models import AgentOperation
+from local_cloud_agent.common.configuration import agent_config
 from tests.common_test import test_constants
 
 
@@ -21,7 +21,7 @@ async def test_init_operation():
     )
     with open(agent_config.operation_log_fp, 'w') as f:
         f.write(test_persist_op.model_dump_json() + '\n')
-    from agent.operations import util
+    from local_cloud_agent.agent.operations import util
     test_msg = MessageTypeDef(
         MessageId='test-message-id',
         Body=test_constants.test_op.model_dump_json()

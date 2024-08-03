@@ -4,9 +4,9 @@ from datetime import datetime
 import aiohttp
 from cumulonimbus_models.operations import OperationResult, UpdateOperationResultRequest
 
-from agent.post_config import logger
-from agent.models import AgentState, AgentOperation
-from agent.util import BASE_API_URL
+from local_cloud_agent.agent.post_config import logger
+from local_cloud_agent.agent.models import AgentState, AgentOperation
+from local_cloud_agent.agent.util import BASE_API_URL
 from typing import Any
 #TODO
 async def send_operation_result(a: Any, b: Any, c: Any) -> None:
