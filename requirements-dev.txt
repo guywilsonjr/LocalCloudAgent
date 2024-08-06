@@ -1,4 +1,4 @@
 pip-tools
-tox
+tox-uv
 mypy
 pydantic

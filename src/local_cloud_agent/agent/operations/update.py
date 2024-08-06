@@ -1,6 +1,6 @@
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 from local_cloud_agent.common.configuration import agent_config
-from local_cloud_agent.agent.post_config import logger
+from local_cloud_agent.common.configuration import logger
 from local_cloud_agent.agent.models import AgentOperation, AgentOperationResult
 from local_cloud_agent.agent.util import write_data_to_file, fetch_file_data
 from local_cloud_agent.common import constants

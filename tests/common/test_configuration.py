@@ -1,12 +1,13 @@
 import os
+import shutil
 
-import pytest
 
 from local_cloud_agent.common.configuration import ensure_dirs_exist, validate_fs, agent_config
 
 
-@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "aws")
 def test_ensure_dirs_exist():
+    if os.path.exists(agent_config.metadata_dir):
+        shutil.rmtree(agent_config.metadata_dir)
     assert not os.path.exists(agent_config.metadata_dir)
     ensure_dirs_exist()
     assert os.path.exists(agent_config.metadata_dir)
@@ -14,12 +15,13 @@ def test_ensure_dirs_exist():
     assert os.path.exists(agent_config.operations_dir)
 
 
-@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed")
 def test_validate_fs():
-    assert not os.path.exists(agent_config.repo_dir)
-    os.makedirs(agent_config.repo_dir)
-    with open(agent_config.aws_creds_fp, 'w') as f:
+    os.makedirs('/root/.aws', exist_ok=True)
+    with open('/root/.aws/credentials', 'w') as f:
         f.write('')
     validate_fs()
+
+    os.remove('/root/.aws/credentials')
+    shutil.rmtree('/root')
 
 

@@ -5,13 +5,12 @@ from types_aiobotocore_sqs import SQSClient
 from types_aiobotocore_sqs.type_defs import MessageTypeDef, ReceiveMessageResultTypeDef
 
 from local_cloud_agent.agent import initialize
-from local_cloud_agent.agent.operations.post_ops import complete_operation
-from local_cloud_agent.agent.operations.util import init_operation
+from local_cloud_agent.agent.operations.util import complete_operation, init_operation
 from local_cloud_agent.agent.operations.ops import operations_map
 from local_cloud_agent.agent.agent_info import get_agent_state
 from local_cloud_agent.agent.models import AgentOperation, AgentOperationResult, AgentState, OperationFunc
 from local_cloud_agent.agent.util import aiosession
-from local_cloud_agent.agent.post_config import logger
+from local_cloud_agent.common.configuration import logger
 
 
 async def get_sqs_response(sqs: SQSClient, queue_url: str) -> ReceiveMessageResultTypeDef:

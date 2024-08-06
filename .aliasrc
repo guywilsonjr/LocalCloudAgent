@@ -2,7 +2,12 @@ export AWS_DEFAULT_REGION=$(aws configure get region)
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account |  tr -d '"')
 
 alias build='docker buildx build -f test.Dockerfile . -t local-cloud-agent-test --load'
-alias test='docker run --privileged -it  local-cloud-agent-test'
+alias test='docker run -d --rm --name local_cloud_agent_test --privileged --cgroupns=host --tmpfs /tmp --tmpfs /run --tmpfs /run/lock -v /test:/test -v /sys/fs/cgroup:/sys/fs/cgroup -it  local-cloud-agent-test'
+alias test_container_id='docker ps -a -q --filter="name=local_cloud_agent_test"'
+alias logintest='docker exec -it $(test_container_id) /bin/bash'
+alias stoptest='docker rm -f $(test_container_id)'
+
+alias btest='sudo rm -rf /test/*.log && sudo rm -rf /test/*.err && build && test && docker exec -it $(test_container_id) /bin/bash -c "touch /test/entry.log && tail -f /test/entry.log"'
 alias ecrlogin='aws ecr get-login-password | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com'
 alias clean='rm -rf .tox build cdk.out .mypy_cache ./**/__pycahce__ build/ dist/ htmlcov/ $(find . -name "*.egg-info") $(find . -name "*.so")'
 alias install_reqs='upgrade_deps && pip install -Ur requirements.in -r requirements-dev.txt -r requirements-test.txt'

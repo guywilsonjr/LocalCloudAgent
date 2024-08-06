@@ -1,5 +1,3 @@
-import logging
-
 import pytest
 from cumulonimbus_models.agent import AgentRegisterResponse
 
@@ -7,10 +5,10 @@ from local_cloud_agent.agent.models import AgentState
 from tests.common_test import test_constants
 
 
-@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
+@pytest.mark.usefixtures("registered_agent")
 @pytest.mark.asyncio
 async def test_register_agent_request():
-    from agent import agent_info
+    from local_cloud_agent.agent import agent_info
     resp = await agent_info.get_registration()
     assert resp == AgentRegisterResponse(
         agent_id=test_constants.test_agent_id,
@@ -20,10 +18,10 @@ async def test_register_agent_request():
     )
 
 
-@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
+@pytest.mark.usefixtures("registered_agent")
 @pytest.mark.asyncio
 async def test_get_registration():
-    from agent import agent_info
+    from local_cloud_agent.agent import agent_info
     resp = await agent_info.get_registration()
     assert resp == AgentRegisterResponse(
         agent_id=test_constants.test_agent_id,
@@ -34,10 +32,10 @@ async def test_get_registration():
 
 
 
-@pytest.mark.usefixtures("installed_repo_dir", "root_fakefs", "fake_base_fs", "installed", "registered_agent")
+@pytest.mark.usefixtures("registered_agent")
 @pytest.mark.asyncio
 async def test_get_agent_state():
-    from agent import agent_info
+    from local_cloud_agent.agent import agent_info
     expected_agent_state = AgentState(
         agent_id=test_constants.test_agent_id,
         queue_url=test_constants.test_operations_queue_url,

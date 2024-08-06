@@ -1,5 +1,10 @@
+import json
+import logging
 import os
+import sys
+from typing import Any
 
+from aws_lambda_powertools import Logger
 from pydantic.main import BaseModel
 from local_cloud_agent.common import constants
 
@@ -14,10 +19,6 @@ class AgentConfig(BaseModel):
 
     def get_prefixed_dir(self, dir_name: str) -> str:
         return f'{self.prefix.rstrip("/")}/{dir_name.lstrip("/")}'
-
-    @property
-    def home_dir(self) -> str:
-        return self.get_prefixed_dir(constants.root_home_dir)
 
     @property
     def log_dir(self) -> str:
@@ -64,10 +65,13 @@ class AgentConfig(BaseModel):
     def update_operation_fp(self) -> str:
         return f'{self.operations_dir}/update.json'
 
+    @property
+    def installed_service_conf_dir(self) -> str:
+        return self.get_prefixed_dir(constants.installed_service_conf_dir)
 
     @property
     def installed_service_fp(self) -> str:
-        return self.get_prefixed_dir(constants.installed_service_conf_fp)
+        return f'{self.installed_service_conf_dir}/{constants.installed_service_conf_fn}'
 
 
 
@@ -82,9 +86,31 @@ def ensure_dirs_exist() -> None:
 
 def validate_fs() -> None:
     ensure_dirs_exist()
-
     if not os.path.exists(agent_config.aws_creds_fp):
         base_msg = 'AWS credentials not found. Please run `aws configure` to set up your credentials.'
         home_msg = f'Could not find {agent_config.aws_creds_fp}'
         msg = '\n'.join([base_msg, home_msg])
         raise RuntimeError(msg)
+
+
+def serialize_log(json_data: dict[str, Any]) -> str:
+    return json.dumps(json_data, indent=2)
+
+
+log_dir_exists = os.path.exists(agent_config.log_dir)
+if log_dir_exists:
+    logger = Logger(
+        service='LocalCloudAgent',
+        level=logging.INFO,
+        logger_handler=logging.FileHandler(agent_config.agent_log_fp),
+        log_uncaught_exceptions=True,
+        json_serializer=serialize_log
+    )
+else:
+    logger = logging.getLogger(__name__)
+
+
+logger.addHandler(logging.StreamHandler(sys.stdout))
+
+if not log_dir_exists:
+    logger.warning(f'Log directory not found: {agent_config.log_dir}. Logging to stdout only.')

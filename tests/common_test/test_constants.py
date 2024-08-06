@@ -19,6 +19,7 @@ test_version_info = VersionInfo(
     patch=test_patch_version,
     release_candidate=test_rc_version
 )
+#TODO fix version stuff
 test_version = str(test_version_info)
 test_op = Operation(
     id='test-operation-id',

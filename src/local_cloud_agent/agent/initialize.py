@@ -1,9 +1,9 @@
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
+from local_cloud_agent.agent.operations.util import complete_operation
 from local_cloud_agent.common.configuration import agent_config
 from local_cloud_agent.agent.models import AgentOperation, AgentState
-from local_cloud_agent.agent.operations.post_ops import complete_operation
-from local_cloud_agent.agent.post_config import logger
+from local_cloud_agent.common.configuration import logger
 from local_cloud_agent.agent.util import fetch_file_data
 
 

@@ -1,7 +1,6 @@
 mypy
-pyfakefs
 pytest
 pytest-asyncio
 pytest-cov
 pytest-mock
-pytest-xdist[psutil]
+#pytest-xdist[psutil]

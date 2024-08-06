@@ -1,8 +1,8 @@
 import pytest
 
 
-@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
+@pytest.mark.usefixtures("registered_agent")
 def test_main():
-    from agent import main
+    from local_cloud_agent.agent import main
     # TODO use mocker
     assert main

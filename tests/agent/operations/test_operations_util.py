@@ -9,7 +9,7 @@ from local_cloud_agent.common.configuration import agent_config
 from tests.common_test import test_constants
 
 
-@pytest.mark.usefixtures("root_fakefs", "fake_base_fs", "installed", "registered_agent")
+@pytest.mark.usefixtures("registered_agent")
 @pytest.mark.asyncio
 async def test_init_operation():
     start_dt = datetime.now()

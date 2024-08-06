@@ -8,3 +8,17 @@ htmlcov/
 **/*.pyc
 **/*.pyo
 **/.mypy_cache/
+LICENSE
+NOTICE
+README.md
+deps.list
+.gitignore
+.aliasrc
+wheelhouse/
+sbin/
+.venv/
+.github/
+.idea/
+__pycache__/
+*.pyc
+.pytest_cache/

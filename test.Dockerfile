@@ -1,4 +1,5 @@
-FROM ubuntu:24.04
+FROM jrei/systemd-ubuntu:latest
+
 ENV INDOCKER=1
 ENV PYTHONUNBUFFERED=1
 ENV PATH=/root/.local/bin:$PATH
@@ -18,6 +19,13 @@ ADD requirements* .
 RUN uv pip install -r requirements-dev.txt
 
 ADD . .
+ADD tests/docker/test_startup.service /usr/lib/systemd/system/test_startup.service
+RUN ln -s /usr/lib/systemd/system/test_startup.service /etc/systemd/system/multi-user.target.wants/test_startup.service
 RUN chmod +x tests/docker/entry.sh
+#ENTRYPOINT ["touch", "/tmp/t0/hello.txt"]
+#ENTRYPOINT ["sh", "./tests/docker/entry.sh"]
+ENTRYPOINT ["systemd", "start", "local_cloud_agent.service"]
 
-ENTRYPOINT ["/bin/bash", "-c", "./tests/docker/entry.sh"]
+
+
+

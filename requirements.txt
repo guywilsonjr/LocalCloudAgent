@@ -14,7 +14,7 @@ aiofiles==24.1.0
     # via aioboto3
 aiohappyeyeballs==2.3.4
     # via aiohttp
-aiohttp==3.10.0
+aiohttp==3.10.1
     # via
     #   -r requirements.in
     #   aiobotocore
@@ -26,7 +26,7 @@ annotated-types==0.7.0
     # via
     #   cumulonimbus-models
     #   pydantic
-attrs==23.2.0
+attrs==24.1.0
     # via aiohttp
 aws-lambda-powertools==2.42.0
     # via -r requirements.in
@@ -37,7 +37,7 @@ botocore==1.34.131
     #   aiobotocore
     #   boto3
     #   s3transfer
-botocore-stubs==1.34.152
+botocore-stubs==1.34.154
     # via
     #   types-aioboto3
     #   types-aiobotocore
@@ -100,14 +100,8 @@ types-aiobotocore-sqs==2.13.1
     # via types-aioboto3
 types-awscrt==0.21.2
     # via botocore-stubs
-types-cffi==1.16.0.20240331
-    # via types-pygit2
-types-pygit2==1.15.0.20240714
-    # via -r requirements.in
 types-s3transfer==0.10.1
     # via types-aioboto3
-types-setuptools==71.1.0.20240726
-    # via types-cffi
 typing-extensions==4.12.0
     # via
     #   aws-lambda-powertools

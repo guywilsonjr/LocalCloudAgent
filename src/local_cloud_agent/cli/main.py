@@ -1,4 +1,3 @@
-import logging
 import os
 
 from local_cloud_agent.common.configuration import agent_config
@@ -6,7 +5,6 @@ from local_cloud_agent.common.configuration import agent_config
 from local_cloud_agent.common import constants, err_constants
 import typer
 
-# TODO: Use typer
 app = typer.Typer()
 
 
@@ -15,7 +13,8 @@ def install_service() -> None:
 
     with open(fp, 'w') as f:
         f.write(constants.service_file_data)
-    logging.info('Service Installed Successfully')
+    os.symlink(fp, constants.systemd_conf_symlink_fp)
+    print('Service Installed Successfully')
 
 
 def root_check() -> None:
@@ -34,6 +33,8 @@ def main() -> None:
 def install() -> None:
     print('Creating metadata, configuration, and log directories')
     os.makedirs(agent_config.metadata_dir, exist_ok=True)
+    os.makedirs(agent_config.agent_dir, exist_ok=True)
+    os.makedirs(agent_config.operations_dir, exist_ok=True)
     os.makedirs(agent_config.conf_dir, exist_ok=True)
     os.makedirs(agent_config.log_dir, exist_ok=True)
     print('Metadata, configuration, and log directories created')

@@ -19,12 +19,18 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     # Indicate who your project is intended for
     "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
     # Pick your license as you wish (see also "license" above)
-    "License :: OSI Approved :: Apple Public Source License",    # Specify the Python versions you support here.
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",    # Specify the Python versions you support here.
+    "Operating System :: Unix",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12"
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: System :: Systems Administration",
+    "Topic :: System :: Monitoring",
+    "Typing :: Typed"
 ]
 
 [project.urls]
@@ -132,9 +138,12 @@ warn_required_dynamic_aliases = true
 [tool.pytest.ini_options]
 
 console_output_style = "progress-even-when-capture-no"
-addopts = "--cov=src -s --cov-report=html -n=auto"
+#addopts = "--cov=src -s --cov-report=html -n=auto"
+addopts = "-s -rA -vvv"
 asyncio_mode = "strict"
 log_cli_level = "INFO"
+testpaths = ["tests/cli", "tests/common"]
+pythonpath = "src"
 
 [tool.coverage.run]
 source = ["src"]
@@ -148,30 +157,35 @@ legacy_tox_ini = """
 envlist = py312, mypy
 
 [testenv]
-parallel = all
-parallel_show_output = true
+#parallel = all
+#parallel_show_output = true
 
 setenv =
     INDOCKER = {env:INDOCKER}
-    PYTHONPATH = {toxinidir}/src/local_cloud_agent
 deps =
     -rrequirements-test.txt
 commands =
-    python3 -m pytest tests/cli
+    python3 -m pytest
 
 [testenv:mypy]
-parallel = all
-parallel_show_output = true
 
 commands =
     python3 -m mypy
 """
 # TODO
-
+[tool.cibuildwheel]
+archs = ["x86_64"]
 #[tool.cibuildwheel.config-settings]
 #--build-option = "--use-mypyc"
 
-[tool.cibuildwheel]
-container-engine = "docker; create_args: -v /var/run/docker.sock:/var/run/docker.sock"
-[tool.cibuildwheel.linux]
-archs = ["aarch64"]
+#[tool.cibuildwheel.environment]
+#MYPYC_OPT_LEVEL = "3"
+
+#[tool.cibuildwheel.linux]
+
+#archs = ["x86_64"]
+
+#[[tool.cibuildwheel.overrides]]
+#select = "*aarch64*"
+#inherit.environment = "append"
+#environment = { "DOCKER_HOST"="ssh://grip5@grpi5-desktop" }

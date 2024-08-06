@@ -1,4 +1,8 @@
 import os
+
+from local_cloud_agent.common import constants
+
+
 if 'INDOCKER' not in os.environ:
     raise Exception('INDOCKER not in os.environ')
 
@@ -14,10 +18,7 @@ import pytest
 import aiofile
 
 from contextlib import asynccontextmanager
-
-from pyfakefs.fake_filesystem_unittest import Patcher
-
-from common_test import test_constants
+from tests.common_test import test_constants
 
 
 @asynccontextmanager
@@ -43,76 +44,27 @@ async def mock_async_open(fp: str, mode: str) -> Generator[Any, None, None]:
 
 aiofile.async_open = mock_async_open
 
-#aiofile.async_open = asynccontextmanager(mock_async_open)
-
 
 @pytest.fixture(scope='function')
-def root_fakefs():
-    logging.info('root_fakefs')
-    with Patcher(allow_root_user=True) as patcher:
-        yield patcher.fs
-
-
-
-@pytest.fixture(scope='function')
-def fake_base_fs():
-    logging.info('fake_base_fs')
-    import os
+def installed():
     from local_cloud_agent.common.configuration import agent_config
-    assert not os.path.exists(agent_config.etc_dir)
-
-    base_dirs = [
-        '/usr/lib/ssl/certs',
-        agent_config.etc_dir,
-        agent_config.var_log_dir,
-        agent_config.var_local_dir,
-        agent_config.home_dir,
-        agent_config.conf_dir
-    ]
-    [os.makedirs(base_dir) for base_dir in base_dirs]
-    os.makedirs('/usr/bin')
-    with open('/usr/bin/python3.12', 'w') as file:
-        file.write('')
+    os.makedirs(agent_config.aws_dir, exist_ok=True)
+    os.makedirs(agent_config.metadata_dir, exist_ok=True)
+    os.makedirs(agent_config.agent_dir, exist_ok=True)
+    os.makedirs(agent_config.operations_dir, exist_ok=True)
+    os.makedirs(agent_config.conf_dir, exist_ok=True)
+    os.makedirs(agent_config.log_dir, exist_ok=True)
     yield
-    shutil.rmtree('/usr/local')
-    shutil.rmtree('/etc')
-    shutil.rmtree('/var')
-    shutil.rmtree(agent_config.home_dir)
-    shutil.rmtree('/usr/lib/ssl/certs')
-
-
-
-@pytest.fixture(scope='function')
-def aws():
-    logging.info('aws')
-    import os
-    from local_cloud_agent.common.configuration import agent_config
-    os.makedirs(agent_config.aws_dir)
-    with open(agent_config.aws_creds_fp, 'w') as f:
-        f.write('')
-    yield
-
-
-@pytest.fixture(scope='function')
-def installed(aws: None):
-    logging.info('installed')
-    import os
-    from common import constants
-    from local_cloud_agent.common.configuration import agent_config
-    os.makedirs(agent_config.agent_dir)
-    os.makedirs(agent_config.operations_dir)
-
-    with open(agent_config.installed_service_fp, 'w') as file:
-        file.write(constants.service_file_data)
-
-    yield
+    shutil.rmtree(agent_config.agent_dir)
+    shutil.rmtree(agent_config.operations_dir)
     shutil.rmtree(agent_config.metadata_dir)
-    os.remove(constants.installed_service_conf_fp)
+    shutil.rmtree(agent_config.conf_dir)
+    shutil.rmtree(agent_config.log_dir)
     shutil.rmtree(agent_config.aws_dir)
 
 
 @pytest.fixture(scope='function')
-def registered_agent():
+def registered_agent(installed):
     import os
     from local_cloud_agent.common.configuration import agent_config
     with open(agent_config.agent_registration_fp, 'w') as f:

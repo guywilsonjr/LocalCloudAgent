@@ -1,0 +1,14 @@
+[Unit]
+Description=Startup
+After=dbus.socket
+
+
+[Service]
+Type=simple
+ExecStart=sh /LocalCloudAgent/tests/docker/entry.sh
+StandardOutput=append:/test/entry.log
+StandardError=append:/test/entry.err
+WorkingDirectory=/LocalCloudAgent
+PassEnvironment=INDOCKER
+[Install]
+WantedBy=multi-user.target

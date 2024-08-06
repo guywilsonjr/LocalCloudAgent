@@ -5,11 +5,10 @@ import random
 import pytest
 
 
-@pytest.mark.usefixtures("root_fakefs")
 @pytest.mark.asyncio
 async def test_util():
     test_fp = f'test.txt'
-    from agent import util
+    from local_cloud_agent.agent import util
     first_char = random.choice(string.ascii_letters)
     second_char = random.choice(string.ascii_letters)
 
