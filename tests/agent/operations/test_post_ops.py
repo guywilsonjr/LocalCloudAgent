@@ -5,6 +5,6 @@ from cumulonimbus_models.operations import OperationResult, OperationResultStatu
 
 from local_cloud_agent.agent.models import AgentState, AgentOperation
 from local_cloud_agent.agent.operations.util import send_operation_result
-from tests.common_test import test_constants, test_mocks
+from tests.common_test import eval_constants, mocks
 
 

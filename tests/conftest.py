@@ -18,7 +18,7 @@ import pytest
 import aiofile
 
 from contextlib import asynccontextmanager
-from tests.common_test import test_constants
+from tests.common_test import eval_constants
 
 
 @asynccontextmanager
@@ -71,11 +71,11 @@ def registered_agent(installed):
         f.write(
             json.dumps(
                 {
-                    'agent_id': test_constants.test_agent_id,
-                    'operations_queue_url': test_constants.test_operations_queue_url,
-                    'version': test_constants.test_version,
-                    'agent_key': test_constants.test_agent_key,  # TODO: This is not used in the agent
-                    'ip_address': test_constants.test_ip_address  # TODO: This is not used in the agent
+                    'agent_id': eval_constants.test_agent_id,
+                    'operations_queue_url': eval_constants.test_operations_queue_url,
+                    'version': eval_constants.test_version,
+                    'agent_key': eval_constants.test_agent_key,  # TODO: This is not used in the agent
+                    'ip_address': eval_constants.test_ip_address  # TODO: This is not used in the agent
                 }
             )
         )

@@ -1,5 +1,5 @@
 import pytest
-from tests.common_test import test_constants
+from tests.common_test import eval_constants
 
 
 @pytest.mark.asyncio

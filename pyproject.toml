@@ -142,7 +142,7 @@ console_output_style = "progress-even-when-capture-no"
 addopts = "-s -rA -vvv"
 asyncio_mode = "strict"
 log_cli_level = "INFO"
-testpaths = ["tests/cli", "tests/common", "tests/agent/operations"]
+testpaths = ["tests"]
 pythonpath = "src"
 
 [tool.coverage.run]

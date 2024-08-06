@@ -6,7 +6,7 @@ from cumulonimbus_models.operations import OperationResultStatus
 
 from local_cloud_agent.agent.models import AgentOperation
 from local_cloud_agent.common.configuration import agent_config
-from tests.common_test import test_constants
+from tests.common_test import eval_constants
 
 
 @pytest.mark.usefixtures("registered_agent")
@@ -16,7 +16,7 @@ async def test_init_operation():
 
     test_persist_op = AgentOperation(
         started=datetime.now(),
-        operation=test_constants.test_op,
+        operation=eval_constants.test_op,
         status=OperationResultStatus.PENDING
     )
     with open(agent_config.operation_log_fp, 'w') as f:
@@ -24,7 +24,7 @@ async def test_init_operation():
     from local_cloud_agent.agent.operations import util
     test_msg = MessageTypeDef(
         MessageId='test-message-id',
-        Body=test_constants.test_op.model_dump_json()
+        Body=eval_constants.test_op.model_dump_json()
     )
     await util.init_operation(test_msg)
     with open(agent_config.operation_log_fp, 'r') as f:
@@ -32,7 +32,7 @@ async def test_init_operation():
     assert len(lines) == 2
     persisted_op = AgentOperation.model_validate_json(lines[0].strip())
     assert OperationResultStatus.PENDING == persisted_op.status
-    assert test_constants.test_op == persisted_op.operation
+    assert eval_constants.test_op == persisted_op.operation
     assert start_dt < persisted_op.started
 
 
