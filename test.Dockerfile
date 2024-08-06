@@ -22,8 +22,6 @@ ADD . .
 ADD tests/docker/test_startup.service /usr/lib/systemd/system/test_startup.service
 RUN ln -s /usr/lib/systemd/system/test_startup.service /etc/systemd/system/multi-user.target.wants/test_startup.service
 RUN chmod +x tests/docker/entry.sh
-#ENTRYPOINT ["touch", "/tmp/t0/hello.txt"]
-#ENTRYPOINT ["sh", "./tests/docker/entry.sh"]
 ENTRYPOINT ["systemd", "start", "local_cloud_agent.service"]
 
 
