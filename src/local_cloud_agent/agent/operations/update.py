@@ -6,6 +6,7 @@ from local_cloud_agent.agent.util import write_data_to_file, fetch_file_data
 from local_cloud_agent.common import constants
 
 
+
 async def check_systemd_service() -> bool:
     logger.info('Checking Systemd Service')
     ref_systemd_conf = constants.service_file_data
