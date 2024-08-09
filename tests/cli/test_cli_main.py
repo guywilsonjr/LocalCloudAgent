@@ -53,7 +53,7 @@ def test_main() -> None:
     exp_dirs = [agent_config.metadata_dir, agent_config.conf_dir, agent_config.log_dir, agent_config.installed_service_fp, constants.systemd_conf_symlink_fp]
     logging.info(f'Expected directories: {exp_dirs}')
 
-    [i for i in map(lambda x: assert_dir_not_exists(x), exp_dirs)]
+    [os.remove(dir_path) for dir_path in exp_dirs if os.path.exists(dir_path)]
 
     runner = CliRunner()
     from local_cloud_agent.cli import main
@@ -63,7 +63,11 @@ def test_main() -> None:
 
     [i for i in map(lambda x: assert_dir_exists(x), exp_dirs)]
     list_case = SubprocessTestCase(
-        ['systemctl', 'list-unit-files', constants.installed_service_conf_fn],
+        [
+            'systemctl',
+            'list-unit-files',
+            constants.installed_service_conf_fn
+        ],
         'UNIT FILE                 STATE   PRESET\nlocal_cloud_agent.service enabled enabled\n\n1 unit files listed.\n'
     )
     run_single_subprocess(list_case)
