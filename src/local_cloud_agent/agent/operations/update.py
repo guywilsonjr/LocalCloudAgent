@@ -20,6 +20,7 @@ async def check_systemd_service() -> bool:
         return False
 
 
+
 async def reload(operation: AgentOperation) -> None:
     # TODO
     logger.info(f'TODO: Running post operation for operation: {operation}')
