@@ -5,13 +5,13 @@ from types_aiobotocore_sqs.type_defs import MessageTypeDef
 from cumulonimbus_models.operations import OperationResultStatus
 
 from local_cloud_agent.agent.models import AgentOperation
-from local_cloud_agent.common.configuration import agent_config
 from tests.common_test import eval_constants
 
 
 @pytest.mark.usefixtures("registered_agent")
 @pytest.mark.asyncio
-async def test_init_operation():
+async def test_init_operation() -> None:
+    from local_cloud_agent.common.configuration import agent_config
     start_dt = datetime.now()
 
     test_persist_op = AgentOperation(

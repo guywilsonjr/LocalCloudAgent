@@ -1,4 +1,4 @@
 pkg-config
-python-apt-dev
-pipx
-python3-dev
+python-apt-dev # For apt management
+pipx # For installing this app
+python3-dev # For building Python C extensions using mypyc

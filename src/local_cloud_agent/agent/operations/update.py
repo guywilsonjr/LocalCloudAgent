@@ -1,3 +1,6 @@
+from asyncio import subprocess
+from typing import Optional
+
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 from local_cloud_agent.common.configuration import agent_config
 from local_cloud_agent.common.configuration import logger
@@ -22,25 +25,31 @@ async def check_systemd_service() -> bool:
 
 
 
-async def reload(operation: AgentOperation) -> None:
-    # TODO
-    logger.info(f'TODO: Running post operation for operation: {operation}')
+async def reload(operation: Optional[AgentOperation] = None) -> None:
+    logger.info(f'Running post operation for operation: {operation}')
+    await subprocess.create_subprocess_shell("systemct daemon-reload")
+    await subprocess.create_subprocess_shell(f"systemctl restart {constants.installed_service_conf_fn}")
 
-
-
-async def update() -> None:
-    # TODO: STUFF
-    pass
 
 
 async def update_local_cloud_agent(operation: AgentOperation) -> AgentOperationResult:
     logger.info('Updating Local Cloud Agent')
     await write_data_to_file(agent_config.update_operation_fp, operation.model_dump_json())
-    await update()
+    logger.info('Update complete. Exiting')
+    exit(0)
+
+
+async def shell_command(operation: AgentOperation) -> AgentOperationResult:
+    logger.info('Running Shell Command')
+    cmd = operation.operation.parameters['cmd']
+    process = await subprocess.create_subprocess_shell(cmd)
+
+    stdout = (await process.stdout.read()) if process.stdout else b''
+    stderr = (await process.stderr.read()) if process.stderr else b''
+
     return AgentOperationResult(
         operation_result=OperationResult(
-            operation_output='SUCCESS',
+            operation_output=f'Stdout: {stdout.decode()}\nStderr: {stderr.decode()}',
             operation_status=OperationResultStatus.SUCCESS
-        ), post_op=reload
+        )
     )
-

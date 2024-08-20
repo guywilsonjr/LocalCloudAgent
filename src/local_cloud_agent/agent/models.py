@@ -5,7 +5,7 @@ from typing import Any, Callable, Coroutine, Optional
 from cumulonimbus_models.operations import Operation, OperationResult, OperationResultStatus
 from pydantic.main import BaseModel
 
-
+# TODO REMOVE. uSED ONLY FOR TESTING
 class VersionInfo(BaseModel):
     major: int
     minor: int
@@ -14,9 +14,9 @@ class VersionInfo(BaseModel):
 
     def __str__(self) -> str:
         if self.release_candidate is None:
-            return f'v{self.major}.{self.minor}.{self.patch}'
+            return f'{self.major}.{self.minor}.{self.patch}'
         else:
-            return f'v{self.major}.{self.minor}.{self.patch}-rc{self.release_candidate}'
+            return f'{self.major}.{self.minor}.{self.patch}rc{self.release_candidate}'
 
 
 class AgentState(BaseModel):

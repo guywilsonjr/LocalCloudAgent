@@ -45,32 +45,22 @@ local-cloud-agent = "local_cloud_agent.cli.main:main"
 requires = [
     "setuptools",
     "setuptools_scm>=8",
-    "mypy[mypyc]",
-    "aiohttp",
-    "aioboto3",
-    "aiofile",
-    "aws-lambda-powertools",
-    "click",
-    "cumulonimbus-models@git+https://github.com/guywilsonjr/CumulonimbusModels@v0.1.0-rc1",
-    "pydantic",
-    "tenacity",
-    "typer",
-    "types-aioboto3[sqs]",
 ]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-include-package-data = true
 
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools.packages.find]
+namespaces = true
 
 [tool.setuptools_scm]
 git_describe_command = "git describe --abbrev=0"
 
 [tool.mypy]
 mypy_path = "src"
-#files = ["src"]
+files = ["src"]
 cache_dir = '/dev/null'
 strict = true
 #disallow_any_unimported = true
@@ -138,8 +128,8 @@ warn_required_dynamic_aliases = true
 [tool.pytest.ini_options]
 
 console_output_style = "progress-even-when-capture-no"
-#addopts = "--cov=src -s --cov-report=html -n=auto"
-addopts = "-s -rA -vvv"
+#addopts = "-n=auto"
+addopts = "-svvv --cov=src --cov-report=html --cov-report=term-missing --log-cli-level=INFO"
 asyncio_mode = "strict"
 log_cli_level = "INFO"
 testpaths = ["tests"]
@@ -148,7 +138,6 @@ pythonpath = "src"
 [tool.coverage.run]
 source = ["src"]
 
-[tool.coverage.report]
 
 [tool.tox]
 

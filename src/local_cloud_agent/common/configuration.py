@@ -98,6 +98,7 @@ def serialize_log(json_data: dict[str, Any]) -> str:
 
 
 log_dir_exists = os.path.exists(agent_config.log_dir)
+logger: logging.Logger | Logger
 if log_dir_exists:
     logger = Logger(
         service='LocalCloudAgent',

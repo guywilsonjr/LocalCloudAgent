@@ -9,6 +9,6 @@ ExecStart=sh /LocalCloudAgent/tests/docker/entry.sh
 StandardOutput=append:/test/entry.log
 StandardError=append:/test/entry.err
 WorkingDirectory=/LocalCloudAgent
-PassEnvironment=INDOCKER
+PassEnvironment=INDOCKER DEBUG
 [Install]
 WantedBy=multi-user.target

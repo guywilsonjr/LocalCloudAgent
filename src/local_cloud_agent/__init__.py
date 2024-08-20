@@ -1,10 +1,10 @@
-from importlib.metadata import version, PackageNotFoundError
+import importlib.metadata
 
 
 def get_version() -> str:
     try:
-        return version('local-cloud-agent')
-    except PackageNotFoundError:
+        return importlib.metadata.version('local-cloud-agent')
+    except importlib.metadata.PackageNotFoundError:
         return 'Unknown'
 
 

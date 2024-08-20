@@ -3,17 +3,19 @@ import os
 import socket
 
 import aiohttp
+import local_cloud_agent
 from cumulonimbus_models.agent import AgentRegisterRequest, AgentRegisterResponse
 from local_cloud_agent.common.configuration import agent_config, logger
 from local_cloud_agent.agent.models import AgentState
 
-from local_cloud_agent.agent.util import BASE_API_URL, fetch_file_data, write_data_to_file
+from local_cloud_agent.agent.util import fetch_file_data, write_data_to_file
 
 
 
 #@retry(wait=wait_exponential(), before=before_log(logger._logger, logging.INFO))
 async def register_agent_request(req: AgentRegisterRequest) -> AgentRegisterResponse:
-    url = AgentRegisterRequest.get_url(BASE_API_URL)
+    # TODO: ADD URL
+    url = AgentRegisterRequest.get_url()
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=req.model_dump()) as resp:
             if resp.status != 200:
@@ -46,9 +48,8 @@ async def get_registration() -> AgentRegisterResponse:
 
 async def get_agent_state() -> AgentState:
     agent_registration = await get_registration()
-    # TODO
     return AgentState(
         agent_id=agent_registration.agent_id,
         queue_url=agent_registration.operations_queue_url,
-        version='TODO'
+        version=local_cloud_agent.__version__
     )

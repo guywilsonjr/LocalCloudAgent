@@ -1,10 +1,16 @@
 import json
 import logging
 import os
+import pathlib
+
 import subprocess
 import traceback
 from typing import Optional, NamedTuple
+
+import pytest
 from typer.testing import CliRunner, Result
+
+from local_cloud_agent.common import err_constants
 
 
 class SubprocessTestCase(NamedTuple):
@@ -28,11 +34,11 @@ def log_cli_result(result: Result) -> None:
 
 
 def assert_dir_exists(dir_path: str) -> None:
-    assert os.path.exists(dir_path)
+    assert pathlib.Path(dir_path).exists(follow_symlinks=True) or pathlib.Path(dir_path).is_symlink()
 
 
 def assert_dir_not_exists(dir_path: str) -> None:
-    assert not os.path.exists(dir_path)
+    assert (not pathlib.Path(dir_path).exists(follow_symlinks=True) and not pathlib.Path(dir_path).is_symlink())
 
 
 def run_single_subprocess(test_case: SubprocessTestCase) -> None:
@@ -46,21 +52,48 @@ def run_single_subprocess(test_case: SubprocessTestCase) -> None:
         assert sub_proc_res.stdout == test_case.exp_output
 
 
-# noinspection PyStatementEffect
 def test_main() -> None:
+    from local_cloud_agent.cli import main
     from local_cloud_agent.common.configuration import agent_config
     from local_cloud_agent.common import constants
-    exp_dirs = [agent_config.metadata_dir, agent_config.conf_dir, agent_config.log_dir, agent_config.installed_service_fp, constants.systemd_conf_symlink_fp]
-    logging.info(f'Expected directories: {exp_dirs}')
+    main.main()
+    main.install_service()
+    assert_dir_exists(agent_config.installed_service_fp)
+    assert_dir_exists(constants.systemd_conf_symlink_fp)
+    main.install_service()
+    assert_dir_exists(agent_config.installed_service_fp)
+    assert_dir_exists(constants.systemd_conf_symlink_fp)
 
-    [os.remove(dir_path) for dir_path in exp_dirs if os.path.exists(dir_path)]
+
+def test_fail_root_check() -> None:
+    import os
+    orig = os.geteuid
+    os.geteuid = lambda: 1
+    from local_cloud_agent.cli import main
+    with pytest.raises(RuntimeError, match=err_constants.root_err_msg):
+        main.root_check()
+    os.geteuid = orig
+
+
+# noinspection PyStatementEffect
+def test_main_app() -> None:
+    from local_cloud_agent.common.configuration import agent_config
+    from local_cloud_agent.common import constants
+    exp_dirs = [
+        agent_config.metadata_dir,
+        agent_config.conf_dir,
+        agent_config.log_dir,
+        agent_config.installed_service_fp,
+        constants.systemd_conf_symlink_fp
+    ]
+
+    [os.remove(dir_path) for dir_path in sorted(exp_dirs) if pathlib.Path(dir_path).exists()]
 
     runner = CliRunner()
     from local_cloud_agent.cli import main
     cli_result: Result = runner.invoke(main.app, ['install'])
     log_cli_result(cli_result)
     assert cli_result.exit_code == 0
-
     [i for i in map(lambda x: assert_dir_exists(x), exp_dirs)]
     list_case = SubprocessTestCase(
         [

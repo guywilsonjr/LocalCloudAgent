@@ -1,5 +1,7 @@
+dist/
+build/
+wheelhouse/
 tmp/
-.tox/
 .venv/
 .idea/
 **/*.egg-info/
@@ -12,13 +14,8 @@ LICENSE
 NOTICE
 README.md
 deps.list
-.gitignore
-.aliasrc
-wheelhouse/
 sbin/
-.venv/
-.github/
-.idea/
 __pycache__/
 *.pyc
 .pytest_cache/
+.tox/

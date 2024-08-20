@@ -1,5 +1,6 @@
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 
+import local_cloud_agent
 from local_cloud_agent.agent.operations.util import complete_operation
 from local_cloud_agent.common.configuration import agent_config
 from local_cloud_agent.agent.models import AgentOperation, AgentState
@@ -22,9 +23,7 @@ async def check_for_updates(agent_state: AgentState) -> None:
 
 
 async def startup(agent_state: AgentState) -> None:
-    # TODO
-    version = """TODO"""
-    logger.info(f'Starting Local Cloud Agent version: {version}')
+    logger.info(f'Starting Local Cloud Agent version: {local_cloud_agent.__version__}')
     await check_for_updates(agent_state)
 
 

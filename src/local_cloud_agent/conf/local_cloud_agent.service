@@ -1,0 +1,9 @@
+[Unit]
+Description=Avahi mDNS/DNS-SD Stack
+
+[Service]
+ExecStart=/bin/sh
+
+[Install]
+WantedBy=multi-user.target
+

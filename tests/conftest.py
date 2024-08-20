@@ -6,8 +6,6 @@ from local_cloud_agent.common import constants
 if 'INDOCKER' not in os.environ:
     raise Exception('INDOCKER not in os.environ')
 
-if os.environ.get('INDOCKER') != '1':
-    raise Exception('INDOCKER not set to 1')
 import json
 import logging
 
@@ -24,7 +22,7 @@ from tests.common_test import eval_constants
 @asynccontextmanager
 async def mock_async_open(fp: str, mode: str) -> Generator[Any, None, None]:
     class MockFileObj:
-        def __init__(self):
+        def __init__(self) -> None:
             logging.info('Opening file %s', fp)
             self.fh = open(fp, mode)
 
@@ -46,7 +44,7 @@ aiofile.async_open = mock_async_open
 
 
 @pytest.fixture(scope='function')
-def installed():
+def installed() -> None:
     from local_cloud_agent.common.configuration import agent_config
     os.makedirs(agent_config.aws_dir, exist_ok=True)
     os.makedirs(agent_config.metadata_dir, exist_ok=True)
@@ -64,7 +62,7 @@ def installed():
 
 
 @pytest.fixture(scope='function')
-def registered_agent(installed):
+def registered_agent(installed) -> None:
     import os
     from local_cloud_agent.common.configuration import agent_config
     with open(agent_config.agent_registration_fp, 'w') as f:

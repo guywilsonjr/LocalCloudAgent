@@ -6,7 +6,7 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_util():
+async def test_util() -> None:
     test_fp = f'test.txt'
     from local_cloud_agent.agent import util
     first_char = random.choice(string.ascii_letters)

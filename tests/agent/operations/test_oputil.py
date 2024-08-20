@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+import pytest_mock
 from cumulonimbus_models.operations import OperationResult, OperationResultStatus
 from types_aiobotocore_sqs.type_defs import MessageTypeDef
 
@@ -11,7 +12,7 @@ from tests.common_test import eval_constants, mocks
 
 @pytest.mark.usefixtures("registered_agent")
 @pytest.mark.asyncio
-async def test_init_operation():
+async def test_init_operation() -> None:
     from local_cloud_agent.common.configuration import agent_config
     start_dt = datetime.now()
 
@@ -39,7 +40,7 @@ async def test_init_operation():
 
 @pytest.mark.usefixtures("registered_agent")
 @pytest.mark.asyncio
-async def test_send_operation_result(mocker):
+async def test_send_operation_result(mocker: pytest_mock.plugin.MockerFixture) -> None:
     test_persist_op = AgentOperation(
         started=datetime.now(),
         operation=eval_constants.test_op,
@@ -56,7 +57,7 @@ async def test_send_operation_result(mocker):
 
 @pytest.mark.usefixtures("registered_agent")
 @pytest.mark.asyncio
-async def test_complete_operation(mocker):
+async def test_complete_operation(mocker: pytest_mock.plugin.MockerFixture) -> None:
     test_persist_op = AgentOperation(
         started=datetime.now(),
         operation=eval_constants.test_op,

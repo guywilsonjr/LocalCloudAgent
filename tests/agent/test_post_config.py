@@ -1,6 +1,6 @@
 
 
-def test_serialize_log():
+def test_serialize_log() -> None:
     from local_cloud_agent.common.configuration import serialize_log
     test_data = {'key1': 'val1', 'key2': 'val2'}
     resp = serialize_log(test_data)

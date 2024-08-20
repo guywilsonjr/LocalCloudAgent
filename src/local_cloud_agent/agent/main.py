@@ -43,22 +43,21 @@ async def execute_operation(agent_state: AgentState, operation_func: OperationFu
         result.operation_result.operation_output = str(e)
         logger.exception(e)
     finally:
-        # TODO add post operation handling on case of failure I think or undo if checking
         if result.post_op:
             logger.info(f'Running post operation for operation: {operation}')
             await result.post_op(operation)
         await complete_operation(agent_state, operation, result.operation_result)
 
 
-async def poll_queue(agent_state: AgentState, sqs: SQSClient, queue_url: str) -> None:
+async def poll_queue(agent_state: AgentState, sqs: SQSClient, queue_url: str) -> bool:
     response = await get_sqs_response(sqs, queue_url)
     if message := response['Messages'][0] if response['Messages'] else None:
         logger.info('Received message')
         operation = await init_operation(message)
         operation_func = await receive_message(sqs, queue_url, operation, message)
         await execute_operation(agent_state, operation_func, operation)
-    else:
-        await asyncio.sleep(60)
+        return True
+    return False
 
 
 async def listen_to_queue(agent_state: AgentState) -> None:
@@ -67,6 +66,8 @@ async def listen_to_queue(agent_state: AgentState) -> None:
         queue_url = agent_state.queue_url
         while True:
             await poll_queue(agent_state, sqs, queue_url)
+            logger.info('Sleeping for 60 seconds')
+            await asyncio.sleep(60)
 
 
 async def async_main() -> None:
@@ -79,6 +80,5 @@ def main() -> None:
     asyncio.run(async_main())
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     main()
-
