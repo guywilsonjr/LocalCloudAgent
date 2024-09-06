@@ -9,7 +9,7 @@ else
   sleep 400
 
 fi
-.venv/bin/tox -e py312
+.venv/bin/tox
 systemctl list-unit-files local_cloud_agent.service
 shutdown 0
 #systemctl restart test_startup.service

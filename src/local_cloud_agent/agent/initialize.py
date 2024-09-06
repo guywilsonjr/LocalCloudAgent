@@ -1,4 +1,4 @@
-from cumulonimbus_models.operations import OperationResult, OperationResultStatus
+from cumulonimbus_models.operations import OperationResult, OperationResultStatus, OperationResultStatuses
 
 import local_cloud_agent
 from local_cloud_agent.agent.operations.util import complete_operation
@@ -17,7 +17,7 @@ async def check_for_updates(agent_state: AgentState) -> None:
 
         result = OperationResult(
             operation_output='SUCCESS',
-            operation_status=OperationResultStatus.SUCCESS
+            operation_status=OperationResultStatuses.SUCCESS
         )
         await complete_operation(agent_state, operation, result)
 

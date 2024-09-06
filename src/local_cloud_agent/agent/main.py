@@ -1,6 +1,6 @@
 import asyncio
 
-from cumulonimbus_models.operations import OperationResult, OperationResultStatus
+from cumulonimbus_models.operations import OperationResult, OperationResultStatus, OperationResultStatuses
 from types_aiobotocore_sqs import SQSClient
 from types_aiobotocore_sqs.type_defs import MessageTypeDef, ReceiveMessageResultTypeDef
 
@@ -34,13 +34,13 @@ async def execute_operation(agent_state: AgentState, operation_func: OperationFu
     result = AgentOperationResult(
         operation_result=OperationResult(
             operation_output='Operation not executed',
-            operation_status=OperationResultStatus.FAILURE
+            operation_status=OperationResultStatuses.FAILURE
         )
     )
     try:
         result = await operation_func(operation)
     except Exception as e:
-        result.operation_result.operation_output = str(e)
+        result = result.model_copy(update={'operation_output': str(e)})
         logger.exception(e)
     finally:
         if result.post_op:

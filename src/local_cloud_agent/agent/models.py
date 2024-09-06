@@ -31,6 +31,7 @@ class AgentOperation(BaseModel):
     status: OperationResultStatus
 
 
+
 PostOperation = Callable[[AgentOperation], Coroutine[Any, Any, None]]
 
 

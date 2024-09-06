@@ -3,6 +3,7 @@ import os
 
 capital_keyword = 'LocalCloudAgent'
 lower_keyword = 'local_cloud_agent'
+python_package_name = lower_keyword.replace('_', '-')
 installed_service_conf_fn = f'{lower_keyword}.service'
 etc_dir = '/etc'
 

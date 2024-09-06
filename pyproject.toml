@@ -146,6 +146,8 @@ legacy_tox_ini = """
 envlist = py312, mypy
 
 [testenv]
+package = wheel
+"""
 #parallel = all
 #parallel_show_output = true
 
